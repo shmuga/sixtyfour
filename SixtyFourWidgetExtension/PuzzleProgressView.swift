@@ -38,7 +38,8 @@ struct PuzzleWidgetView: View {
 
     @Environment(\.widgetFamily) var family
 
-    private var deepLink: URL {
+    private var deepLink: URL? {
+        guard entry.remaining > 0 else { return nil }
         let path = entry.goalMode == .games ? "play" : "puzzles"
         return URL(string: "sixtyfour://open-chesscom/\(path)")!
     }
@@ -54,7 +55,7 @@ struct PuzzleWidgetView: View {
                 smallWidget
             }
         }
-        .widgetURL(deepLink)
+        .widgetURL(deepLink ?? URL(string: "sixtyfour://home")!)
     }
 
     // MARK: - Knight Silhouette
