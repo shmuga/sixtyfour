@@ -19,7 +19,7 @@ final class NotificationService {
 
     /// Schedule a notification at 7 PM today if the goal isn't reached.
     /// Call this after every stats fetch.
-    func updateDailyReminder(solved: Int, target: Int, enabled: Bool) {
+    func updateDailyReminder(solved: Int, target: Int, enabled: Bool, mode: GoalMode = .puzzles) {
         // Cancel any existing reminder first
         center.removePendingNotificationRequests(withIdentifiers: [dailyReminderID])
 
@@ -29,8 +29,16 @@ final class NotificationService {
         guard remaining > 0 else { return } // Goal reached, no reminder needed
 
         let content = UNMutableNotificationContent()
-        content.title = "Puzzle Reminder"
-        content.body = "You have \(remaining) puzzle\(remaining == 1 ? "" : "s") left to reach your daily goal!"
+
+        switch mode {
+        case .puzzles:
+            content.title = "Puzzle Reminder"
+            content.body = "You have \(remaining) puzzle\(remaining == 1 ? "" : "s") left to reach your daily goal!"
+        case .games:
+            content.title = "Game Reminder"
+            content.body = "You have \(remaining) game\(remaining == 1 ? "" : "s") left to reach your daily goal!"
+        }
+
         content.sound = .default
 
         let trigger: UNNotificationTrigger

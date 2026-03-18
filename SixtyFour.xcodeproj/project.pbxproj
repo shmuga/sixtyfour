@@ -1,0 +1,552 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01A1B2C3D4E5F6A7B8C9D001 /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */; };
+		01A1B2C3D4E5F6A7B8C9D002 /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */; };
+		01A1B2C3D4E5F6A7B8C9D003 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */; };
+		01A1B2C3D4E5F6A7B8C9D004 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */; };
+		03907135162CCF4FD1C48E6F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF929161CD33024591EE28 /* NotificationService.swift */; };
+		05A03092108285F6833202F1 /* PuzzleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41841BA5EBC93A3A837604CF /* PuzzleProgressView.swift */; };
+		0FAA9135938609F7107BC6BD /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF929161CD33024591EE28 /* NotificationService.swift */; };
+		1D27A4F5E86A0EC256C857F9 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF5DAB1949D7E24F91E08D0 /* DashboardView.swift */; };
+		27C26B6FCA7C9EF5777C5310 /* PuzzleStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1A9575C44DB3038636708 /* PuzzleStats.swift */; };
+		5276D3A41E14708D694FB22C /* SixtyFourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A0BDDFCEB62FF530B5731B /* SixtyFourApp.swift */; };
+		52A30681B0D059C5EB3CE63E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */; };
+		65FBF60D800A74BBBF049784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44BF458F5E7DD73A20D874F0 /* Assets.xcassets */; };
+		7A7F99D7D5A20BB044273066 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73241A650BBD19E524F2DB1B /* MainTabView.swift */; };
+		856E7F35E12C9E0A07DF38BC /* PuzzleStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1A9575C44DB3038636708 /* PuzzleStats.swift */; };
+		9A96DB57AD0A4F6F72A384C6 /* SixtyFourWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6AD820C11C618CC4426BCC /* SixtyFourWidget.swift */; };
+		9D5EA02CB6200BC65715C5F9 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */; };
+		A4123FAD8E161D91F1761AC7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FAB9E258066DFE8DDF1722 /* HistoryView.swift */; };
+		BD85CB182968DCD1F49A2053 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */; };
+		BFEA16859BF1AC1B48715125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B463A7F854B35BE53A8A24F1 /* SettingsView.swift */; };
+		C69D35765787B1082430842F /* ChessComService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86451C487B4583C6D003BB /* ChessComService.swift */; };
+		CBBD27823268B9CCE7493E40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96903E1F5BD36155984618A9 /* Assets.xcassets */; };
+		CC72228E910F0B821F21E092 /* SixtyFourWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D5970A55CC5DD5CADDA57FF8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD93325404C6E07E68CA3F13 /* OnboardingView.swift */; };
+		D93C2D12AC799429C33D2078 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B857FF55A6C6E8A6A68876 /* Theme.swift */; };
+		EB1C1742EDDFAE8101B3DC8C /* ChessComService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86451C487B4583C6D003BB /* ChessComService.swift */; };
+		F731DF68FF540504837ECBB5 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5F77059643F7BFB9F40AE716 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AAA751C152CB335CDB4AE0B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A8A2A4FD46B44875CF61743;
+			remoteInfo = SixtyFourWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4506579BDB7D9C12D4F57896 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CC72228E910F0B821F21E092 /* SixtyFourWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalMode.swift; sourceTree = "<group>"; };
+		01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStats.swift; sourceTree = "<group>"; };
+		0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
+		0F6AD820C11C618CC4426BCC /* SixtyFourWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixtyFourWidget.swift; sourceTree = "<group>"; };
+		312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SixtyFourWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		37EA7A8D4677FAE0FDB142D8 /* SixtyFourWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SixtyFourWidgetExtension.entitlements; sourceTree = "<group>"; };
+		41841BA5EBC93A3A837604CF /* PuzzleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleProgressView.swift; sourceTree = "<group>"; };
+		44BF458F5E7DD73A20D874F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		64AF929161CD33024591EE28 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		6AFEB3E5EDD3062BD777C61E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		73241A650BBD19E524F2DB1B /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		8A86451C487B4583C6D003BB /* ChessComService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessComService.swift; sourceTree = "<group>"; };
+		8BD1A9575C44DB3038636708 /* PuzzleStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleStats.swift; sourceTree = "<group>"; };
+		90FAB9E258066DFE8DDF1722 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		96903E1F5BD36155984618A9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerProfile.swift; sourceTree = "<group>"; };
+		A9A0BDDFCEB62FF530B5731B /* SixtyFourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixtyFourApp.swift; sourceTree = "<group>"; };
+		AD93325404C6E07E68CA3F13 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		B463A7F854B35BE53A8A24F1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B8EC9BD5D2D3BD9BA889F122 /* SixtyFour.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SixtyFour.entitlements; sourceTree = "<group>"; };
+		C2B857FF55A6C6E8A6A68876 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		EFF5DAB1949D7E24F91E08D0 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		FE2DC3095BB1E3AA65653EFF /* SixtyFour.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SixtyFour.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		42FF91ABFD7C31B9484CEF15 = {
+			isa = PBXGroup;
+			children = (
+				BEB234355D65AACC266E2180 /* SixtyFour */,
+				D03F03C042A15B1AAAA77E35 /* SixtyFourWidgetExtension */,
+				56C326EF8B0A485E274A0425 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		56C326EF8B0A485E274A0425 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE2DC3095BB1E3AA65653EFF /* SixtyFour.app */,
+				312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00C9DCD79329BB9295BBCD3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EFF5DAB1949D7E24F91E08D0 /* DashboardView.swift */,
+				90FAB9E258066DFE8DDF1722 /* HistoryView.swift */,
+				73241A650BBD19E524F2DB1B /* MainTabView.swift */,
+				AD93325404C6E07E68CA3F13 /* OnboardingView.swift */,
+				B463A7F854B35BE53A8A24F1 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BEB234355D65AACC266E2180 /* SixtyFour */ = {
+			isa = PBXGroup;
+			children = (
+				44BF458F5E7DD73A20D874F0 /* Assets.xcassets */,
+				B8EC9BD5D2D3BD9BA889F122 /* SixtyFour.entitlements */,
+				A9A0BDDFCEB62FF530B5731B /* SixtyFourApp.swift */,
+				C2B857FF55A6C6E8A6A68876 /* Theme.swift */,
+				D691E75B00F486D54EAD9CF6 /* Models */,
+				C4AF28EBCCB86C500C074A72 /* Services */,
+				A00C9DCD79329BB9295BBCD3 /* Views */,
+			);
+			path = SixtyFour;
+			sourceTree = "<group>";
+		};
+		C4AF28EBCCB86C500C074A72 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				8A86451C487B4583C6D003BB /* ChessComService.swift */,
+				64AF929161CD33024591EE28 /* NotificationService.swift */,
+				0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D03F03C042A15B1AAAA77E35 /* SixtyFourWidgetExtension */ = {
+			isa = PBXGroup;
+			children = (
+				96903E1F5BD36155984618A9 /* Assets.xcassets */,
+				6AFEB3E5EDD3062BD777C61E /* Info.plist */,
+				41841BA5EBC93A3A837604CF /* PuzzleProgressView.swift */,
+				0F6AD820C11C618CC4426BCC /* SixtyFourWidget.swift */,
+				37EA7A8D4677FAE0FDB142D8 /* SixtyFourWidgetExtension.entitlements */,
+			);
+			path = SixtyFourWidgetExtension;
+			sourceTree = "<group>";
+		};
+		D691E75B00F486D54EAD9CF6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */,
+				01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */,
+				9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */,
+				8BD1A9575C44DB3038636708 /* PuzzleStats.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A8A2A4FD46B44875CF61743 /* SixtyFourWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27506AC05F684EC37BB31007 /* Build configuration list for PBXNativeTarget "SixtyFourWidgetExtension" */;
+			buildPhases = (
+				86B43D27D334C93B0578588D /* Sources */,
+				5F689CED1F21BA2EFA472A83 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SixtyFourWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = SixtyFourWidgetExtension;
+			productReference = 312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		3031682EC7EA9A8D3B6E9115 /* SixtyFour */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F49BD64F36C3B416F06B1C87 /* Build configuration list for PBXNativeTarget "SixtyFour" */;
+			buildPhases = (
+				4FEADBB85737794AE598944A /* Sources */,
+				5BC9899DD6C92889D4F64F7B /* Resources */,
+				4506579BDB7D9C12D4F57896 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				007768A6BB068AD1543FFC79 /* PBXTargetDependency */,
+			);
+			name = SixtyFour;
+			packageProductDependencies = (
+			);
+			productName = SixtyFour;
+			productReference = FE2DC3095BB1E3AA65653EFF /* SixtyFour.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7AAA751C152CB335CDB4AE0B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0A8A2A4FD46B44875CF61743 = {
+						DevelopmentTeam = RS3489446Y;
+						ProvisioningStyle = Automatic;
+					};
+					3031682EC7EA9A8D3B6E9115 = {
+						DevelopmentTeam = RS3489446Y;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 62D2B3A28F6F484D167A4959 /* Build configuration list for PBXProject "SixtyFour" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 42FF91ABFD7C31B9484CEF15;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 56C326EF8B0A485E274A0425 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3031682EC7EA9A8D3B6E9115 /* SixtyFour */,
+				0A8A2A4FD46B44875CF61743 /* SixtyFourWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5BC9899DD6C92889D4F64F7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65FBF60D800A74BBBF049784 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5F689CED1F21BA2EFA472A83 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBBD27823268B9CCE7493E40 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4FEADBB85737794AE598944A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C69D35765787B1082430842F /* ChessComService.swift in Sources */,
+				01A1B2C3D4E5F6A7B8C9D003 /* GameStats.swift in Sources */,
+				01A1B2C3D4E5F6A7B8C9D001 /* GoalMode.swift in Sources */,
+				1D27A4F5E86A0EC256C857F9 /* DashboardView.swift in Sources */,
+				A4123FAD8E161D91F1761AC7 /* HistoryView.swift in Sources */,
+				7A7F99D7D5A20BB044273066 /* MainTabView.swift in Sources */,
+				03907135162CCF4FD1C48E6F /* NotificationService.swift in Sources */,
+				D5970A55CC5DD5CADDA57FF8 /* OnboardingView.swift in Sources */,
+				F731DF68FF540504837ECBB5 /* PlayerProfile.swift in Sources */,
+				856E7F35E12C9E0A07DF38BC /* PuzzleStats.swift in Sources */,
+				BFEA16859BF1AC1B48715125 /* SettingsView.swift in Sources */,
+				5276D3A41E14708D694FB22C /* SixtyFourApp.swift in Sources */,
+				D93C2D12AC799429C33D2078 /* Theme.swift in Sources */,
+				52A30681B0D059C5EB3CE63E /* UserStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		86B43D27D334C93B0578588D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB1C1742EDDFAE8101B3DC8C /* ChessComService.swift in Sources */,
+				01A1B2C3D4E5F6A7B8C9D004 /* GameStats.swift in Sources */,
+				01A1B2C3D4E5F6A7B8C9D002 /* GoalMode.swift in Sources */,
+				0FAA9135938609F7107BC6BD /* NotificationService.swift in Sources */,
+				BD85CB182968DCD1F49A2053 /* PlayerProfile.swift in Sources */,
+				05A03092108285F6833202F1 /* PuzzleProgressView.swift in Sources */,
+				27C26B6FCA7C9EF5777C5310 /* PuzzleStats.swift in Sources */,
+				9A96DB57AD0A4F6F72A384C6 /* SixtyFourWidget.swift in Sources */,
+				9D5EA02CB6200BC65715C5F9 /* UserStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		007768A6BB068AD1543FFC79 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A8A2A4FD46B44875CF61743 /* SixtyFourWidgetExtension */;
+			targetProxy = 5F77059643F7BFB9F40AE716 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A0534B42EB64B5F31185A220 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = RS3489446Y;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A1163FE3E80994892B44EC62 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SixtyFourWidgetExtension/SixtyFourWidgetExtension.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
+				INFOPLIST_FILE = SixtyFourWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markorel.sixtyfour.widget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C4292BDC2178CCE16CC7FCAA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SixtyFour/SixtyFour.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markorel.sixtyfour;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C713EF26075F649A6B0C9D60 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = RS3489446Y;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E75A28D2ED11BD35A1AF513B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = SixtyFourWidgetExtension/SixtyFourWidgetExtension.entitlements;
+				CURRENT_PROJECT_VERSION = 2;
+				INFOPLIST_FILE = SixtyFourWidgetExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markorel.sixtyfour.widget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		EBE408A5A8702177B877F83C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SixtyFour/SixtyFour.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markorel.sixtyfour;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27506AC05F684EC37BB31007 /* Build configuration list for PBXNativeTarget "SixtyFourWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1163FE3E80994892B44EC62 /* Debug */,
+				E75A28D2ED11BD35A1AF513B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		62D2B3A28F6F484D167A4959 /* Build configuration list for PBXProject "SixtyFour" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0534B42EB64B5F31185A220 /* Debug */,
+				C713EF26075F649A6B0C9D60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F49BD64F36C3B416F06B1C87 /* Build configuration list for PBXNativeTarget "SixtyFour" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBE408A5A8702177B877F83C /* Debug */,
+				C4292BDC2178CCE16CC7FCAA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7AAA751C152CB335CDB4AE0B /* Project object */;
+}

@@ -22,6 +22,25 @@ final class UserStore: ObservableObject {
         didSet { defaults.set(goalReachedEnabled, forKey: "goalReachedEnabled") }
     }
 
+    @Published var goalMode: GoalMode {
+        didSet { defaults.set(goalMode.rawValue, forKey: "goalMode") }
+    }
+
+    @Published var gameTimeClass: TimeClass {
+        didSet { defaults.set(gameTimeClass.rawValue, forKey: "gameTimeClass") }
+    }
+
+    @Published var dailyGameTarget: Int {
+        didSet { defaults.set(dailyGameTarget, forKey: "dailyGameTarget") }
+    }
+
+    var activeTarget: Int {
+        switch goalMode {
+        case .puzzles: return dailyPuzzleTarget
+        case .games: return dailyGameTarget
+        }
+    }
+
     var isOnboarded: Bool {
         !username.isEmpty
     }
@@ -33,11 +52,17 @@ final class UserStore: ObservableObject {
         self.dailyPuzzleTarget = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
         self.dailyReminderEnabled = defaults.object(forKey: "dailyReminderEnabled") as? Bool ?? true
         self.goalReachedEnabled = defaults.object(forKey: "goalReachedEnabled") as? Bool ?? true
+        self.goalMode = GoalMode(rawValue: defaults.string(forKey: "goalMode") ?? "") ?? .puzzles
+        self.gameTimeClass = TimeClass(rawValue: defaults.string(forKey: "gameTimeClass") ?? "") ?? .blitz
+        self.dailyGameTarget = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
     }
 
     func reset() {
         username = ""
         dailyPuzzleTarget = 10
+        dailyGameTarget = 3
+        goalMode = .puzzles
+        gameTimeClass = .blitz
         NotificationService.shared.cancelAll()
     }
 }

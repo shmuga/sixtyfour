@@ -62,9 +62,11 @@ struct PuzzleWidgetView: View {
 
     private var smallWidget: some View {
         let progressVal = entry.target > 0 ? Double(entry.solved) / Double(entry.target) : 0
+        let goalReached = entry.remaining <= 0
+        let accentColor = goalReached ? Color(hex: 0x2ECC71) : Color(hex: 0xF5A623)
 
         return ZStack {
-            // Knight silhouette — left side, partially cropped
+            // Knight silhouette — centered
             knightImage
                 .foregroundColor(Color.white.opacity(0.08))
                 .frame(height: 130)
@@ -77,19 +79,25 @@ struct PuzzleWidgetView: View {
                 ZStack {
                     ActivityRing(
                         progress: progressVal,
-                        color: Color(hex: 0xF5A623),
+                        color: accentColor,
                         lineWidth: 7,
                         size: 78
                     )
 
-                    VStack(spacing: -2) {
-                        Text("\(entry.remaining)")
-                            .font(.system(size: 38, weight: .bold))
-                            .foregroundColor(Color(hex: 0xF5A623))
-                        Text("LEFT")
-                            .font(.system(size: 9, weight: .medium, design: .monospaced))
-                            .foregroundColor(Color(hex: 0xF5A623).opacity(0.7))
-                            .kerning(1.5)
+                    if goalReached {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 34, weight: .bold))
+                            .foregroundColor(Color(hex: 0x2ECC71))
+                    } else {
+                        VStack(spacing: -2) {
+                            Text("\(entry.remaining)")
+                                .font(.system(size: 38, weight: .bold))
+                                .foregroundColor(accentColor)
+                            Text("LEFT")
+                                .font(.system(size: 9, weight: .medium, design: .monospaced))
+                                .foregroundColor(accentColor.opacity(0.7))
+                                .kerning(1.5)
+                        }
                     }
                 }
 
@@ -97,7 +105,7 @@ struct PuzzleWidgetView: View {
                 HStack(alignment: .lastTextBaseline, spacing: 10) {
                     Text("\(entry.solved)/\(entry.target)")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundColor(Color(hex: 0x555049))
+                        .foregroundColor(goalReached ? Color(hex: 0x2ECC71).opacity(0.6) : Color(hex: 0x555049))
                     if let rating = entry.rating {
                         HStack(alignment: .lastTextBaseline, spacing: 2) {
                             Text("▲")
@@ -164,8 +172,8 @@ struct PuzzleWidgetView: View {
 
                 // Stats stacked vertically
                 WidgetStatRow(color: Color(hex: 0xF5A623), value: "\(entry.remaining)", label: "LEFT")
-                WidgetStatRow(color: Color(hex: 0x2ECC71), value: "\(entry.solved)", label: "PASSED")
-                WidgetStatRow(color: Color(hex: 0xE74C3C), value: "\(entry.failed)", label: "FAILED")
+                WidgetStatRow(color: Color(hex: 0x2ECC71), value: "\(entry.solved)", label: entry.solvedLabel)
+                WidgetStatRow(color: Color(hex: 0xE74C3C), value: "\(entry.failed)", label: entry.failedLabel)
 
                 Spacer(minLength: 0)
 
