@@ -205,6 +205,122 @@ struct PuzzleWidgetView: View {
     }
 }
 
+// MARK: - Rating Widget View
+
+struct RatingWidgetView: View {
+    let entry: WidgetRatingEntry
+
+    @Environment(\.widgetFamily) var family
+
+    private var knightImage: some View {
+        Image("knight")
+            .renderingMode(.template)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+    }
+
+    var body: some View {
+        Group {
+            switch family {
+            case .systemSmall:
+                smallRating
+            case .systemMedium:
+                mediumRating
+            default:
+                smallRating
+            }
+        }
+        .widgetURL(URL(string: "sixtyfour://home")!)
+    }
+
+    // MARK: - Small Rating
+
+    private var smallRating: some View {
+        ZStack {
+            knightImage
+                .foregroundColor(Color.white.opacity(0.08))
+                .frame(height: 130)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+
+            VStack(spacing: 4) {
+                Text(entry.timeClass.displayName)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundColor(Color(hex: 0xF5A623))
+                    .kerning(2)
+
+                Spacer(minLength: 0)
+
+                Text("\(entry.rating)")
+                    .font(.system(size: 48, weight: .bold))
+                    .foregroundColor(Color(hex: 0xECE8DF))
+                    .minimumScaleFactor(0.6)
+
+                Text("RATING")
+                    .font(.system(size: 8, weight: .medium, design: .monospaced))
+                    .foregroundColor(Color(hex: 0x555049))
+                    .kerning(1.5)
+
+                Spacer(minLength: 0)
+            }
+            .padding(14)
+        }
+        .clipped()
+    }
+
+    // MARK: - Medium Rating
+
+    private var mediumRating: some View {
+        ZStack {
+            knightImage
+                .foregroundColor(Color.white.opacity(0.07))
+                .frame(height: 150)
+                .offset(x: 40)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+
+            HStack(spacing: 0) {
+                // Left — big rating + time class
+                VStack(spacing: 2) {
+                    Spacer(minLength: 0)
+                    Text("\(entry.rating)")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(Color(hex: 0xECE8DF))
+                        .minimumScaleFactor(0.6)
+                    Text(entry.timeClass.displayName)
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .foregroundColor(Color(hex: 0xF5A623))
+                        .kerning(2)
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity)
+
+                // Right — stat column
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("SIXTYFOUR")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(Color(hex: 0xF5A623).opacity(0.75))
+                        .kerning(1.5)
+                        .lineLimit(1)
+
+                    Spacer(minLength: 0)
+
+                    WidgetStatRow(color: Color(hex: 0xF5A623), value: "\(entry.bestRating)", label: "BEST")
+                    WidgetStatRow(color: Color(hex: 0x2ECC71), value: "\(entry.wins)", label: "WON")
+                    WidgetStatRow(color: Color(hex: 0xE74C3C), value: "\(entry.losses)", label: "LOST")
+                    WidgetStatRow(color: Color(hex: 0x555049), value: "\(entry.draws)", label: "DRAW")
+
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 20)
+            }
+            .padding(.leading, 14)
+            .padding(.trailing, 16)
+            .padding(.vertical, 12)
+        }
+        .clipped()
+    }
+}
+
 struct WidgetStatRow: View {
     let color: Color
     let value: String

@@ -56,26 +56,24 @@ struct SettingsView: View {
                     .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
                 }
 
-                // Time class (games only)
-                if isGames {
-                    CfgRow {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Time Class")
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(SFColor.ivory)
-                            Text(store.gameTimeClass.displayName.lowercased())
-                                .font(.system(size: 10, design: .monospaced))
-                                .foregroundColor(SFColor.ivory3)
-                        }
-                    } trailing: {
-                        HStack(spacing: 0) {
-                            ForEach(TimeClass.allCases, id: \.self) { tc in
-                                timeClassButton(tc)
-                            }
-                        }
-                        .background(RoundedRectangle(cornerRadius: 8).fill(SFColor.s4))
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
+                // Time class
+                CfgRow {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Time Class")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(SFColor.ivory)
+                        Text(store.gameTimeClass.displayName.lowercased())
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(SFColor.ivory3)
                     }
+                } trailing: {
+                    HStack(spacing: 0) {
+                        ForEach(TimeClass.allCases, id: \.self) { tc in
+                            timeClassButton(tc)
+                        }
+                    }
+                    .background(RoundedRectangle(cornerRadius: 8).fill(SFColor.s4))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
                 }
 
                 // Daily target section

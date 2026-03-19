@@ -34,10 +34,10 @@ enum OnboardingStep {
 struct OnboardingView: View {
     @EnvironmentObject var store: UserStore
     @State private var username = ""
-    @State private var goalMode: GoalMode = .puzzles
+    @State private var goalMode: GoalMode = .games
     @State private var gameTimeClass: TimeClass = .blitz
-    @State private var dailyTarget = 10
-    @State private var targetText = "10"
+    @State private var dailyTarget = 3
+    @State private var targetText = "3"
     @State private var remindersEnabled = true
     @State private var isValidating = false
     @State private var errorMessage: String?

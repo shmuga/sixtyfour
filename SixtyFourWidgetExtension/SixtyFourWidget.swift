@@ -108,10 +108,106 @@ struct PuzzleProgressWidget: Widget {
     }
 }
 
+// MARK: - Rating Widget
+
+struct WidgetRatingEntry: TimelineEntry {
+    let date: Date
+    let rating: Int
+    let bestRating: Int
+    let wins: Int
+    let losses: Int
+    let draws: Int
+    let timeClass: TimeClass
+    let username: String
+    let isPlaceholder: Bool
+
+    static let placeholder = WidgetRatingEntry(
+        date: .now, rating: 1247, bestRating: 1385,
+        wins: 312, losses: 198, draws: 47,
+        timeClass: .blitz, username: "player", isPlaceholder: true
+    )
+}
+
+struct RatingTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> WidgetRatingEntry {
+        .placeholder
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (WidgetRatingEntry) -> Void) {
+        if context.isPreview {
+            completion(.placeholder)
+            return
+        }
+        fetchEntry { completion($0) }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<WidgetRatingEntry>) -> Void) {
+        fetchEntry { entry in
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: entry.date)!
+            completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+        }
+    }
+
+    private func fetchEntry(completion: @escaping (WidgetRatingEntry) -> Void) {
+        let defaults = UserDefaults(suiteName: UserStore.appGroupID) ?? .standard
+        let username = defaults.string(forKey: "username") ?? ""
+        let timeClassStr = defaults.string(forKey: "gameTimeClass") ?? "blitz"
+        let timeClass = TimeClass(rawValue: timeClassStr) ?? .blitz
+
+        guard !username.isEmpty else {
+            completion(WidgetRatingEntry(
+                date: .now, rating: 0, bestRating: 0,
+                wins: 0, losses: 0, draws: 0,
+                timeClass: timeClass, username: "", isPlaceholder: false
+            ))
+            return
+        }
+
+        Task {
+            do {
+                let stats = try await ChessComService.shared.fetchFullStats(username)
+                let category = stats.category(for: timeClass)
+                completion(WidgetRatingEntry(
+                    date: .now,
+                    rating: category?.last?.rating ?? 0,
+                    bestRating: category?.best?.rating ?? 0,
+                    wins: category?.record?.win ?? 0,
+                    losses: category?.record?.loss ?? 0,
+                    draws: category?.record?.draw ?? 0,
+                    timeClass: timeClass,
+                    username: username,
+                    isPlaceholder: false
+                ))
+            } catch {
+                completion(WidgetRatingEntry(
+                    date: .now, rating: 0, bestRating: 0,
+                    wins: 0, losses: 0, draws: 0,
+                    timeClass: timeClass, username: username, isPlaceholder: false
+                ))
+            }
+        }
+    }
+}
+
+struct RatingWidget: Widget {
+    let kind = "RatingWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: RatingTimelineProvider()) { entry in
+            RatingWidgetView(entry: entry)
+                .containerBackground(Color(hex: 0x0D0D0F), for: .widget)
+        }
+        .configurationDisplayName("Rating")
+        .description("View your current chess rating and stats.")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
 @main
 struct SixtyFourWidgetBundle: WidgetBundle {
     var body: some Widget {
         PuzzleProgressWidget()
+        RatingWidget()
     }
 }
 

@@ -52,7 +52,7 @@ final class UserStore: ObservableObject {
         self.dailyPuzzleTarget = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
         self.dailyReminderEnabled = defaults.object(forKey: "dailyReminderEnabled") as? Bool ?? true
         self.goalReachedEnabled = defaults.object(forKey: "goalReachedEnabled") as? Bool ?? true
-        self.goalMode = GoalMode(rawValue: defaults.string(forKey: "goalMode") ?? "") ?? .puzzles
+        self.goalMode = GoalMode(rawValue: defaults.string(forKey: "goalMode") ?? "") ?? .games
         self.gameTimeClass = TimeClass(rawValue: defaults.string(forKey: "gameTimeClass") ?? "") ?? .blitz
         self.dailyGameTarget = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
     }
@@ -61,7 +61,7 @@ final class UserStore: ObservableObject {
         username = ""
         dailyPuzzleTarget = 10
         dailyGameTarget = 3
-        goalMode = .puzzles
+        goalMode = .games
         gameTimeClass = .blitz
         NotificationService.shared.cancelAll()
     }

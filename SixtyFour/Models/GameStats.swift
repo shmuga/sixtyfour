@@ -82,14 +82,16 @@ struct FullPlayerStats: Codable {
         case chessDaily = "chess_daily"
     }
 
-    func rating(for timeClass: TimeClass) -> Int? {
-        let category: GameRatingCategory?
+    func category(for timeClass: TimeClass) -> GameRatingCategory? {
         switch timeClass {
-        case .bullet: category = chessBullet
-        case .blitz: category = chessBlitz
-        case .rapid: category = chessRapid
-        case .daily: category = chessDaily
+        case .bullet: return chessBullet
+        case .blitz: return chessBlitz
+        case .rapid: return chessRapid
+        case .daily: return chessDaily
         }
-        return category?.last?.rating
+    }
+
+    func rating(for timeClass: TimeClass) -> Int? {
+        category(for: timeClass)?.last?.rating
     }
 }
