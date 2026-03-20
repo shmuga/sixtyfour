@@ -7,6 +7,7 @@ struct HistoryView: View {
     @State private var isLoading = true
 
     private var isGames: Bool { store.goalMode == .games }
+    private var bothGoalsEnabled: Bool { store.puzzleGoalEnabled && store.gameGoalEnabled }
 
     // Puzzle stats
     private var totalSolved: Int { dailyStats.reduce(0) { $0 + $1.totalPassed } }
@@ -37,6 +38,11 @@ struct HistoryView: View {
                         .foregroundColor(SFColor.ivory2)
                         .kerning(2)
                     Spacer()
+
+                    if bothGoalsEnabled {
+                        compactGoalToggle
+                    }
+
                     Text("LAST 30 DAYS")
                         .font(.system(size: 9, weight: .bold, design: .monospaced))
                         .foregroundColor(SFColor.amber)
@@ -123,6 +129,32 @@ struct HistoryView: View {
         }
         .background(SFColor.s2)
         .task(id: "\(store.username)-\(store.goalMode.rawValue)-\(store.gameTimeClass.rawValue)") { await loadStats() }
+    }
+
+    private var compactGoalToggle: some View {
+        HStack(spacing: 0) {
+            compactToggleButton(.games, icon: "flag.pattern.checkered")
+            compactToggleButton(.puzzles, icon: "puzzlepiece.fill")
+        }
+        .background(RoundedRectangle(cornerRadius: 9).fill(SFColor.s3))
+        .overlay(RoundedRectangle(cornerRadius: 9).stroke(SFColor.border, lineWidth: 1))
+        .padding(.trailing, 8)
+    }
+
+    private func compactToggleButton(_ mode: GoalMode, icon: String) -> some View {
+        Button {
+            store.goalMode = mode
+        } label: {
+            Image(systemName: icon)
+                .font(.system(size: 10))
+                .foregroundColor(store.goalMode == mode ? SFColor.void_ : SFColor.ivory3)
+                .frame(width: 30, height: 30)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(store.goalMode == mode ? SFColor.amber : Color.clear)
+                )
+        }
+        .padding(2)
     }
 
     private func loadStats() async {

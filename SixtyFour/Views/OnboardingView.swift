@@ -27,24 +27,40 @@ struct ChessboardIcon: View {
 enum OnboardingStep {
     case username
     case goalType
-    case goal
+    case gameGoal
+    case gameTimeClass
+    case puzzleGoal
     case reminders
+}
+
+enum GoalSelection {
+    case puzzles, games, both
+
+    var puzzleEnabled: Bool { self == .puzzles || self == .both }
+    var gameEnabled: Bool { self == .games || self == .both }
 }
 
 struct OnboardingView: View {
     @EnvironmentObject var store: UserStore
+
     @State private var username = ""
-    @State private var goalMode: GoalMode = .games
+    @State private var goalSelection: GoalSelection = .games
     @State private var gameTimeClass: TimeClass = .blitz
-    @State private var dailyTarget = 3
-    @State private var targetText = "3"
+    @State private var dailyGameTarget = 3
+    @State private var dailyPuzzleTarget = 10
     @State private var remindersEnabled = true
     @State private var isValidating = false
     @State private var errorMessage: String?
     @State private var step: OnboardingStep = .username
 
-    private var presets: [Int] {
-        goalMode == .puzzles ? [5, 10, 20, 50] : [1, 3, 5, 10]
+    /// The next step after goal type selection
+    private var stepAfterGoalType: OnboardingStep {
+        goalSelection.gameEnabled ? .gameGoal : .puzzleGoal
+    }
+
+    /// The next step after game time class
+    private var stepAfterGameTimeClass: OnboardingStep {
+        goalSelection.puzzleEnabled ? .puzzleGoal : .reminders
     }
 
     var body: some View {
@@ -76,29 +92,24 @@ struct OnboardingView: View {
                     .padding(.bottom, 28)
 
                 switch step {
-                case .username:
-                    usernameContent
-                case .goalType:
-                    goalTypeContent
-                case .goal:
-                    goalContent
-                case .reminders:
-                    remindersContent
+                case .username:      usernameContent
+                case .goalType:      goalTypeContent
+                case .gameGoal:      gameGoalContent
+                case .gameTimeClass: gameTimeClassContent
+                case .puzzleGoal:    puzzleGoalContent
+                case .reminders:     remindersContent
                 }
 
                 Spacer()
 
-                // Bottom button area
                 VStack(spacing: 0) {
                     switch step {
-                    case .username:
-                        usernameBottom
-                    case .goalType:
-                        goalTypeBottom
-                    case .goal:
-                        goalBottom
-                    case .reminders:
-                        remindersBottom
+                    case .username:      usernameBottom
+                    case .goalType:      goalTypeBottom
+                    case .gameGoal:      gameGoalBottom
+                    case .gameTimeClass: gameTimeClassBottom
+                    case .puzzleGoal:    puzzleGoalBottom
+                    case .reminders:     remindersBottom
                     }
                 }
                 .padding(.bottom, 30)
@@ -146,14 +157,7 @@ struct OnboardingView: View {
                 Task { await validate() }
             }
 
-            HStack(spacing: 4) {
-                Image(systemName: "lock.open")
-                    .font(.system(size: 8))
-                Text("No password required")
-                    .font(.system(size: 8, design: .monospaced))
-            }
-            .foregroundColor(SFColor.ivory3)
-            .padding(.top, 10)
+            bottomSubtitle("No password required")
         }
         .frame(height: 80)
     }
@@ -173,189 +177,218 @@ struct OnboardingView: View {
                 .foregroundColor(SFColor.ivory3)
                 .padding(.bottom, 20)
 
-            HStack(spacing: 12) {
-                goalTypeCard(
-                    mode: .puzzles,
-                    icon: "puzzlepiece.fill",
-                    title: "PUZZLES",
-                    subtitle: "Solve daily puzzles"
-                )
-                goalTypeCard(
-                    mode: .games,
-                    icon: "flag.pattern.checkered",
-                    title: "GAMES",
-                    subtitle: "Play rated games"
-                )
+            HStack(spacing: 10) {
+                goalTypeCard(selection: .games, icon: "flag.pattern.checkered", title: "GAMES")
+                goalTypeCard(selection: .puzzles, icon: "puzzlepiece.fill", title: "PUZZLES")
+                goalTypeCard(selection: .both, icon: "star.fill", title: "BOTH")
             }
-            .padding(.horizontal, 32)
+            .padding(.horizontal, 28)
         }
     }
 
-    private func goalTypeCard(mode: GoalMode, icon: String, title: String, subtitle: String) -> some View {
-        Button {
-            goalMode = mode
-            // Set sensible defaults when switching
-            if mode == .puzzles {
-                dailyTarget = 10
-                targetText = "10"
-            } else {
-                dailyTarget = 3
-                targetText = "3"
-            }
+    private func goalTypeCard(selection: GoalSelection, icon: String, title: String) -> some View {
+        let selected = goalSelection == selection
+        return Button {
+            goalSelection = selection
         } label: {
-            VStack(spacing: 8) {
+            VStack(spacing: 7) {
                 Image(systemName: icon)
-                    .font(.system(size: 24))
-                    .foregroundColor(goalMode == mode ? SFColor.amber : SFColor.ivory3)
-                    .frame(width: 32, height: 32)
+                    .font(.system(size: 22))
+                    .foregroundColor(selected ? SFColor.amber : SFColor.ivory3)
+                    .frame(width: 28, height: 28)
 
                 Text(title)
-                    .font(.system(size: 11, weight: .bold, design: .monospaced))
-                    .foregroundColor(goalMode == mode ? SFColor.ivory : SFColor.ivory3)
-                    .kerning(1.5)
-
-                Text(subtitle)
-                    .font(.system(size: 9, design: .monospaced))
-                    .foregroundColor(SFColor.ivory3)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundColor(selected ? SFColor.ivory : SFColor.ivory3)
+                    .kerning(1)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, 14)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(goalMode == mode ? SFColor.s4 : SFColor.s3)
+                    .fill(selected ? SFColor.s4 : SFColor.s3)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(goalMode == mode ? SFColor.amber : SFColor.border, lineWidth: goalMode == mode ? 1.5 : 1)
+                    .stroke(selected ? SFColor.amber : SFColor.border, lineWidth: selected ? 1.5 : 1)
             )
         }
     }
 
     private var goalTypeBottom: some View {
-        VStack(spacing: 0) {
-            onboardingButton(label: "CONTINUE", isLoading: false, disabled: false) {
-                step = .goal
-            }
-
-            Text("You can change this later in settings")
-                .font(.system(size: 8, design: .monospaced))
-                .foregroundColor(SFColor.ivory3)
-                .padding(.top, 10)
+        bottomArea(label: "CONTINUE") {
+            step = stepAfterGoalType
         }
-        .frame(height: 80)
     }
 
-    // MARK: - Step 3: Daily Goal
+    // MARK: - Step 3: Game Goal
 
-    private var goalContent: some View {
+    private var gameGoalContent: some View {
         VStack(spacing: 0) {
-            Text(goalMode == .puzzles ? "DAILY PUZZLE GOAL" : "DAILY GAMES GOAL")
+            Image(systemName: "flag.pattern.checkered")
+                .font(.system(size: 28))
+                .foregroundColor(SFColor.amber)
+                .padding(.bottom, 14)
+
+            Text("DAILY GAME GOAL")
                 .font(.system(size: 10, weight: .bold, design: .monospaced))
                 .foregroundColor(SFColor.amber)
                 .kerning(2)
                 .padding(.bottom, 6)
 
-            Text(goalMode == .puzzles ? "How many puzzles per day?" : "How many games per day?")
+            Text("How many games per day?")
                 .font(.system(size: 11, design: .monospaced))
                 .foregroundColor(SFColor.ivory3)
-                .padding(.bottom, 16)
-
-            // Time class picker (games only)
-            if goalMode == .games {
-                HStack(spacing: 8) {
-                    ForEach(TimeClass.allCases, id: \.self) { tc in
-                        Button {
-                            gameTimeClass = tc
-                        } label: {
-                            Text(tc.displayName)
-                                .font(.system(size: 10, weight: .medium, design: .monospaced))
-                                .foregroundColor(gameTimeClass == tc ? SFColor.void_ : SFColor.ivory3)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 7)
-                                .background(
-                                    Capsule()
-                                        .fill(gameTimeClass == tc ? SFColor.amber : SFColor.s4)
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .stroke(gameTimeClass == tc ? Color.clear : SFColor.border, lineWidth: 1)
-                                )
-                        }
-                    }
-                }
-                .padding(.bottom, 16)
-            }
+                .padding(.bottom, 20)
 
             HStack(spacing: 14) {
                 StepperButton(symbol: "minus") {
-                    if dailyTarget > 1 {
-                        dailyTarget -= 1
-                        targetText = "\(dailyTarget)"
-                    }
+                    if dailyGameTarget > 1 { dailyGameTarget -= 1 }
                 }
 
-                TextField("", text: $targetText)
+                Text("\(dailyGameTarget)")
                     .font(.system(size: 36, weight: .bold, design: .monospaced))
                     .foregroundColor(SFColor.amber)
-                    .multilineTextAlignment(.center)
-                    .keyboardType(.numberPad)
                     .frame(width: 70)
-                    .onChange(of: targetText) { _, newVal in
-                        if let num = Int(newVal), num >= 1, num <= 999 {
-                            dailyTarget = num
-                        }
-                    }
+                    .multilineTextAlignment(.center)
 
                 StepperButton(symbol: "plus") {
-                    if dailyTarget < 999 {
-                        dailyTarget += 1
-                        targetText = "\(dailyTarget)"
-                    }
+                    if dailyGameTarget < 999 { dailyGameTarget += 1 }
                 }
             }
             .padding(.bottom, 8)
 
-            // Presets
             HStack(spacing: 8) {
-                ForEach(presets, id: \.self) { val in
-                    Button {
-                        dailyTarget = val
-                        targetText = "\(val)"
-                    } label: {
-                        Text("\(val)")
-                            .font(.system(size: 11, weight: .medium, design: .monospaced))
-                            .foregroundColor(dailyTarget == val ? SFColor.void_ : SFColor.ivory3)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 7)
-                            .background(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(dailyTarget == val ? SFColor.amber : SFColor.s4)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(dailyTarget == val ? Color.clear : SFColor.border, lineWidth: 1)
-                            )
+                ForEach([1, 3, 5, 10], id: \.self) { val in
+                    presetButton(val, selected: dailyGameTarget == val) {
+                        dailyGameTarget = val
                     }
                 }
             }
         }
     }
 
-    private var goalBottom: some View {
-        VStack(spacing: 0) {
-            onboardingButton(label: "CONTINUE", isLoading: false, disabled: false) {
-                step = .reminders
-            }
-
-            Text("You can change this later in settings")
-                .font(.system(size: 8, design: .monospaced))
-                .foregroundColor(SFColor.ivory3)
-                .padding(.top, 10)
+    private var gameGoalBottom: some View {
+        bottomArea(label: "CONTINUE") {
+            step = .gameTimeClass
         }
-        .frame(height: 80)
     }
 
-    // MARK: - Step 4: Reminders
+    // MARK: - Step 4: Game Time Class
+
+    private var gameTimeClassContent: some View {
+        VStack(spacing: 0) {
+            Image(systemName: "clock")
+                .font(.system(size: 28))
+                .foregroundColor(SFColor.amber)
+                .padding(.bottom, 14)
+
+            Text("TIME CLASS")
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundColor(SFColor.amber)
+                .kerning(2)
+                .padding(.bottom, 6)
+
+            Text("Which time control do you play?")
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundColor(SFColor.ivory3)
+                .padding(.bottom, 24)
+
+            VStack(spacing: 8) {
+                ForEach(TimeClass.allCases, id: \.self) { tc in
+                    timeClassRow(tc)
+                }
+            }
+            .padding(.horizontal, 32)
+        }
+    }
+
+    private func timeClassRow(_ tc: TimeClass) -> some View {
+        let selected = gameTimeClass == tc
+        return Button {
+            gameTimeClass = tc
+        } label: {
+            HStack {
+                Text(tc.displayName)
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
+                    .foregroundColor(selected ? SFColor.ivory : SFColor.ivory3)
+                Spacer()
+                if selected {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(SFColor.amber)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 13)
+            .background(RoundedRectangle(cornerRadius: 12).fill(selected ? SFColor.s4 : SFColor.s3))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(selected ? SFColor.amber : SFColor.border, lineWidth: selected ? 1.5 : 1)
+            )
+        }
+    }
+
+    private var gameTimeClassBottom: some View {
+        bottomArea(label: "CONTINUE") {
+            step = stepAfterGameTimeClass
+        }
+    }
+
+    // MARK: - Step 5: Puzzle Goal
+
+    private var puzzleGoalContent: some View {
+        VStack(spacing: 0) {
+            Image(systemName: "puzzlepiece.fill")
+                .font(.system(size: 28))
+                .foregroundColor(SFColor.amber)
+                .padding(.bottom, 14)
+
+            Text("DAILY PUZZLE GOAL")
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundColor(SFColor.amber)
+                .kerning(2)
+                .padding(.bottom, 6)
+
+            Text("How many puzzles per day?")
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundColor(SFColor.ivory3)
+                .padding(.bottom, 20)
+
+            HStack(spacing: 14) {
+                StepperButton(symbol: "minus") {
+                    if dailyPuzzleTarget > 1 { dailyPuzzleTarget -= 1 }
+                }
+
+                Text("\(dailyPuzzleTarget)")
+                    .font(.system(size: 36, weight: .bold, design: .monospaced))
+                    .foregroundColor(SFColor.amber)
+                    .frame(width: 70)
+                    .multilineTextAlignment(.center)
+
+                StepperButton(symbol: "plus") {
+                    if dailyPuzzleTarget < 999 { dailyPuzzleTarget += 1 }
+                }
+            }
+            .padding(.bottom, 8)
+
+            HStack(spacing: 8) {
+                ForEach([5, 10, 20, 50], id: \.self) { val in
+                    presetButton(val, selected: dailyPuzzleTarget == val) {
+                        dailyPuzzleTarget = val
+                    }
+                }
+            }
+        }
+    }
+
+    private var puzzleGoalBottom: some View {
+        bottomArea(label: "CONTINUE") {
+            step = .reminders
+        }
+    }
+
+    // MARK: - Step 6: Reminders
 
     private var remindersContent: some View {
         VStack(spacing: 0) {
@@ -376,7 +409,6 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 20)
 
-            // Toggle
             HStack {
                 Text("Daily reminder")
                     .font(.system(size: 12, weight: .medium))
@@ -405,7 +437,7 @@ struct OnboardingView: View {
                 finishOnboarding()
             } label: {
                 Text("Skip")
-                    .font(.system(size: 11, design: .monospaced))
+                    .font(.system(size: 8, design: .monospaced))
                     .foregroundColor(SFColor.ivory3)
             }
             .padding(.top, 10)
@@ -413,7 +445,40 @@ struct OnboardingView: View {
         .frame(height: 80)
     }
 
-    // MARK: - Shared Button
+    // MARK: - Helpers
+
+    private func bottomArea(label: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 0) {
+            onboardingButton(label: label, isLoading: false, disabled: false, action: action)
+            bottomSubtitle("You can change this later in settings")
+        }
+        .frame(height: 80)
+    }
+
+    private func bottomSubtitle(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 8, design: .monospaced))
+            .foregroundColor(SFColor.ivory3)
+            .padding(.top, 10)
+    }
+
+    private func presetButton(_ val: Int, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text("\(val)")
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundColor(selected ? SFColor.void_ : SFColor.ivory3)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 7)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(selected ? SFColor.amber : SFColor.s4)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(selected ? Color.clear : SFColor.border, lineWidth: 1)
+                )
+        }
+    }
 
     private func onboardingButton(label: String, isLoading: Bool, disabled: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
@@ -462,14 +527,17 @@ struct OnboardingView: View {
     }
 
     private func finishOnboarding() {
-        store.goalMode = goalMode
+        store.gameGoalEnabled = goalSelection.gameEnabled
+        store.puzzleGoalEnabled = goalSelection.puzzleEnabled
         store.gameTimeClass = gameTimeClass
-        if goalMode == .puzzles {
-            store.dailyPuzzleTarget = dailyTarget
-        } else {
-            store.dailyGameTarget = dailyTarget
-        }
+        store.dailyGameTarget = dailyGameTarget
+        store.dailyPuzzleTarget = dailyPuzzleTarget
         store.dailyReminderEnabled = remindersEnabled
+        if goalSelection.gameEnabled {
+            store.goalMode = .games
+        } else {
+            store.goalMode = .puzzles
+        }
         store.username = username.trimmingCharacters(in: .whitespaces)
         if remindersEnabled {
             Task { await NotificationService.shared.requestPermission() }

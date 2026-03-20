@@ -20,21 +20,32 @@ struct PuzzleEntry: TimelineEntry {
     var solvedLabel: String { goalMode == .games ? "WON" : "PASSED" }
     var failedLabel: String { goalMode == .games ? "LOST" : "FAILED" }
 
-    static let placeholder = PuzzleEntry(
-        date: .now, solved: 52, failed: 23, target: 75,
+    static let puzzlePlaceholder = PuzzleEntry(
+        date: .now, solved: 7, failed: 3, target: 10,
         rating: 1511, username: "player", isPlaceholder: true,
         goalMode: .puzzles
     )
+
+    static let gamePlaceholder = PuzzleEntry(
+        date: .now, solved: 2, failed: 1, target: 3,
+        rating: 1247, username: "player", isPlaceholder: true,
+        goalMode: .games
+    )
+
+    // Keep backward compat
+    static let placeholder = puzzlePlaceholder
 }
+
+// MARK: - Puzzle Timeline Provider
 
 struct PuzzleTimelineProvider: TimelineProvider {
     func placeholder(in context: Context) -> PuzzleEntry {
-        .placeholder
+        .puzzlePlaceholder
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PuzzleEntry) -> Void) {
         if context.isPreview {
-            completion(.placeholder)
+            completion(.puzzlePlaceholder)
             return
         }
         fetchEntry { completion($0) }
@@ -50,29 +61,21 @@ struct PuzzleTimelineProvider: TimelineProvider {
     private func fetchEntry(completion: @escaping (PuzzleEntry) -> Void) {
         let defaults = UserDefaults(suiteName: UserStore.appGroupID) ?? .standard
         let username = defaults.string(forKey: "username") ?? ""
-        let goalModeStr = defaults.string(forKey: "goalMode") ?? "puzzles"
-        let goalMode = GoalMode(rawValue: goalModeStr) ?? .puzzles
-        let timeClassStr = defaults.string(forKey: "gameTimeClass") ?? "blitz"
-        let timeClass = TimeClass(rawValue: timeClassStr) ?? .blitz
-        let target: Int
-        if goalMode == .games {
-            target = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
-        } else {
-            target = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
-        }
+        let enabled = defaults.object(forKey: "puzzleGoalEnabled") as? Bool ?? true
+        let target = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
 
-        guard !username.isEmpty else {
+        guard !username.isEmpty, enabled else {
             completion(PuzzleEntry(
                 date: .now, solved: 0, failed: 0, target: target,
-                rating: nil, username: "", isPlaceholder: false,
-                goalMode: goalMode
+                rating: nil, username: username, isPlaceholder: false,
+                goalMode: .puzzles
             ))
             return
         }
 
         Task {
             do {
-                let result = try await ChessComService.shared.fetchTodayStats(username, mode: goalMode, timeClass: timeClass)
+                let result = try await ChessComService.shared.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz)
                 completion(PuzzleEntry(
                     date: .now,
                     solved: result.solved,
@@ -81,13 +84,13 @@ struct PuzzleTimelineProvider: TimelineProvider {
                     rating: result.rating,
                     username: username,
                     isPlaceholder: false,
-                    goalMode: goalMode
+                    goalMode: .puzzles
                 ))
             } catch {
                 completion(PuzzleEntry(
                     date: .now, solved: 0, failed: 0, target: target,
                     rating: nil, username: username, isPlaceholder: false,
-                    goalMode: goalMode
+                    goalMode: .puzzles
                 ))
             }
         }
@@ -102,8 +105,85 @@ struct PuzzleProgressWidget: Widget {
             PuzzleWidgetView(entry: entry)
                 .containerBackground(Color(hex: 0x0D0D0F), for: .widget)
         }
-        .configurationDisplayName("Goal Progress")
-        .description("Track daily chess goal progress with activity rings.")
+        .configurationDisplayName("Puzzle Goal")
+        .description("Track daily puzzle goal progress.")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+
+// MARK: - Game Timeline Provider
+
+struct GameTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> PuzzleEntry {
+        .gamePlaceholder
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (PuzzleEntry) -> Void) {
+        if context.isPreview {
+            completion(.gamePlaceholder)
+            return
+        }
+        fetchEntry { completion($0) }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<PuzzleEntry>) -> Void) {
+        fetchEntry { entry in
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: entry.date)!
+            completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+        }
+    }
+
+    private func fetchEntry(completion: @escaping (PuzzleEntry) -> Void) {
+        let defaults = UserDefaults(suiteName: UserStore.appGroupID) ?? .standard
+        let username = defaults.string(forKey: "username") ?? ""
+        let enabled = defaults.object(forKey: "gameGoalEnabled") as? Bool ?? true
+        let target = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
+        let timeClassStr = defaults.string(forKey: "gameTimeClass") ?? "blitz"
+        let timeClass = TimeClass(rawValue: timeClassStr) ?? .blitz
+
+        guard !username.isEmpty, enabled else {
+            completion(PuzzleEntry(
+                date: .now, solved: 0, failed: 0, target: target,
+                rating: nil, username: username, isPlaceholder: false,
+                goalMode: .games
+            ))
+            return
+        }
+
+        Task {
+            do {
+                let result = try await ChessComService.shared.fetchTodayStats(username, mode: .games, timeClass: timeClass)
+                completion(PuzzleEntry(
+                    date: .now,
+                    solved: result.solved,
+                    failed: result.failed,
+                    target: target,
+                    rating: result.rating,
+                    username: username,
+                    isPlaceholder: false,
+                    goalMode: .games
+                ))
+            } catch {
+                completion(PuzzleEntry(
+                    date: .now, solved: 0, failed: 0, target: target,
+                    rating: nil, username: username, isPlaceholder: false,
+                    goalMode: .games
+                ))
+            }
+        }
+    }
+}
+
+struct GameGoalWidget: Widget {
+    let kind = "GameGoalWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: GameTimelineProvider()) { entry in
+            PuzzleWidgetView(entry: entry)
+                .containerBackground(Color(hex: 0x0D0D0F), for: .widget)
+        }
+        .configurationDisplayName("Game Goal")
+        .description("Track daily game goal progress.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -207,6 +287,7 @@ struct RatingWidget: Widget {
 struct SixtyFourWidgetBundle: WidgetBundle {
     var body: some Widget {
         PuzzleProgressWidget()
+        GameGoalWidget()
         RatingWidget()
     }
 }

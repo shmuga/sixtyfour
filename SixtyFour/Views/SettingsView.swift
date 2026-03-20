@@ -3,9 +3,6 @@ import WidgetKit
 
 struct SettingsView: View {
     @EnvironmentObject var store: UserStore
-    @State private var targetText = ""
-
-    private var isGames: Bool { store.goalMode == .games }
 
     var body: some View {
         ScrollView {
@@ -30,31 +27,38 @@ struct SettingsView: View {
                             .foregroundColor(SFColor.ivory3)
                     }
                 } trailing: {
-                    Text("chess.com ↗")
+                    Text("chess.com \u{2197}")
                         .font(.system(size: 10, design: .monospaced))
                         .foregroundColor(SFColor.amber)
                 }
 
-                // Goal mode section
-                sectionLabel(icon: "flag", text: "GOAL MODE")
+                // Goals section
+                sectionLabel(icon: "flag", text: "GOALS")
 
-                CfgRow {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Tracking")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(SFColor.ivory)
-                        Text(isGames ? "Games" : "Puzzles")
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(SFColor.ivory3)
+                ToggleRow(label: "Track puzzles", isOn: Binding(
+                    get: { store.puzzleGoalEnabled },
+                    set: { newVal in
+                        // Ensure at least one goal stays enabled
+                        if !newVal && !store.gameGoalEnabled { return }
+                        store.puzzleGoalEnabled = newVal
+                        if !newVal && store.goalMode == .puzzles {
+                            store.goalMode = .games
+                        }
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
-                } trailing: {
-                    HStack(spacing: 0) {
-                        goalModeButton(.puzzles, label: "PUZZLES")
-                        goalModeButton(.games, label: "GAMES")
+                ))
+
+                ToggleRow(label: "Track games", isOn: Binding(
+                    get: { store.gameGoalEnabled },
+                    set: { newVal in
+                        if !newVal && !store.puzzleGoalEnabled { return }
+                        store.gameGoalEnabled = newVal
+                        if !newVal && store.goalMode == .games {
+                            store.goalMode = .puzzles
+                        }
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
-                    .background(RoundedRectangle(cornerRadius: 8).fill(SFColor.s4))
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
-                }
+                ))
 
                 // Time class
                 CfgRow {
@@ -74,49 +78,6 @@ struct SettingsView: View {
                     }
                     .background(RoundedRectangle(cornerRadius: 8).fill(SFColor.s4))
                     .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
-                }
-
-                // Daily target section
-                sectionLabel(icon: "target", text: "DAILY TARGET")
-
-                CfgRow {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(isGames ? "Game Goal" : "Puzzle Goal")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(SFColor.ivory)
-                        Text("per day")
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(SFColor.ivory3)
-                    }
-                } trailing: {
-                    HStack(spacing: 7) {
-                        StepperButton(symbol: "minus") {
-                            if currentTarget > 1 {
-                                setCurrentTarget(currentTarget - 1)
-                                WidgetCenter.shared.reloadAllTimelines()
-                            }
-                        }
-
-                        TextField("", text: $targetText)
-                            .font(.system(size: 22, weight: .bold, design: .monospaced))
-                            .foregroundColor(SFColor.amber)
-                            .multilineTextAlignment(.center)
-                            .keyboardType(.numberPad)
-                            .frame(width: 44)
-                            .onChange(of: targetText) { _, newVal in
-                                if let num = Int(newVal), num >= 1, num <= 999 {
-                                    setCurrentTarget(num)
-                                    WidgetCenter.shared.reloadAllTimelines()
-                                }
-                            }
-
-                        StepperButton(symbol: "plus") {
-                            if currentTarget < 999 {
-                                setCurrentTarget(currentTarget + 1)
-                                WidgetCenter.shared.reloadAllTimelines()
-                            }
-                        }
-                    }
                 }
 
                 // Notifications section
@@ -152,41 +113,6 @@ struct SettingsView: View {
             .padding(.bottom, 20)
         }
         .background(SFColor.s2)
-        .onAppear { targetText = "\(currentTarget)" }
-        .onChange(of: store.goalMode) { _, _ in
-            targetText = "\(currentTarget)"
-        }
-    }
-
-    private var currentTarget: Int {
-        isGames ? store.dailyGameTarget : store.dailyPuzzleTarget
-    }
-
-    private func setCurrentTarget(_ value: Int) {
-        if isGames {
-            store.dailyGameTarget = value
-        } else {
-            store.dailyPuzzleTarget = value
-        }
-        targetText = "\(value)"
-    }
-
-    private func goalModeButton(_ mode: GoalMode, label: String) -> some View {
-        Button {
-            store.goalMode = mode
-            WidgetCenter.shared.reloadAllTimelines()
-        } label: {
-            Text(label)
-                .font(.system(size: 9, weight: .bold, design: .monospaced))
-                .foregroundColor(store.goalMode == mode ? SFColor.void_ : SFColor.ivory3)
-                .kerning(1)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 7)
-                .background(
-                    RoundedRectangle(cornerRadius: 7)
-                        .fill(store.goalMode == mode ? SFColor.amber : Color.clear)
-                )
-        }
     }
 
     private func timeClassButton(_ tc: TimeClass) -> some View {

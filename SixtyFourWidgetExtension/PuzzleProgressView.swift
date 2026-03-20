@@ -40,8 +40,15 @@ struct PuzzleWidgetView: View {
 
     private var deepLink: URL? {
         guard entry.remaining > 0 else { return nil }
-        let path = entry.goalMode == .games ? "play" : "puzzles"
-        return URL(string: "sixtyfour://open-chesscom/\(path)")!
+        return URL(string: "sixtyfour://open-chesscom/play")!
+    }
+
+    private var modeIcon: String {
+        entry.goalMode == .games ? "flag.pattern.checkered" : "puzzlepiece.fill"
+    }
+
+    private var modeLabel: String {
+        entry.goalMode == .games ? "GAMES" : "PUZZLES"
     }
 
     var body: some View {
@@ -82,6 +89,17 @@ struct PuzzleWidgetView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 
             VStack(spacing: 8) {
+                // Mode badge
+                HStack(spacing: 3) {
+                    Image(systemName: modeIcon)
+                        .font(.system(size: 7))
+                    Text(modeLabel)
+                        .font(.system(size: 7, weight: .bold, design: .monospaced))
+                        .kerning(1)
+                }
+                .foregroundColor(Color(hex: 0xF5A623))
+                .frame(maxWidth: .infinity, alignment: .leading)
+
                 Spacer(minLength: 0)
 
                 // Ring + center text
@@ -170,12 +188,16 @@ struct PuzzleWidgetView: View {
 
             // Right side — vertical stat stack
             VStack(alignment: .leading, spacing: 1) {
-                // Header
-                Text("SIXTYFOUR")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(Color(hex: 0xF5A623).opacity(0.75))
-                    .kerning(1.5)
-                    .lineLimit(1)
+                // Mode badge
+                HStack(spacing: 4) {
+                    Image(systemName: modeIcon)
+                        .font(.system(size: 8))
+                    Text(modeLabel)
+                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                        .kerning(1.5)
+                }
+                .foregroundColor(Color(hex: 0xF5A623).opacity(0.75))
+                .lineLimit(1)
 
                 Spacer(minLength: 0)
 

@@ -3,13 +3,28 @@ import WidgetKit
 
 struct DashboardView: View {
     @EnvironmentObject var store: UserStore
-    @State private var solved = 0
-    @State private var failed = 0
-    @State private var rating: Int?
+
+    // Puzzle data
+    @State private var puzzleSolved = 0
+    @State private var puzzleFailed = 0
+    @State private var puzzleRating: Int?
+    @State private var puzzleSparkline: [Int] = Array(repeating: 0, count: 7)
+
+    // Game data
+    @State private var gameSolved = 0
+    @State private var gameFailed = 0
+    @State private var gameRating: Int?
+    @State private var gameSparkline: [Int] = Array(repeating: 0, count: 7)
+
     @State private var isLoading = true
     @State private var errorMessage: String?
     @State private var profile: PlayerProfile?
-    @State private var sparkline: [Int] = Array(repeating: 0, count: 7)
+
+    // Computed properties that read from the appropriate set based on goalMode
+    private var solved: Int { isGames ? gameSolved : puzzleSolved }
+    private var failed: Int { isGames ? gameFailed : puzzleFailed }
+    private var rating: Int? { isGames ? gameRating : puzzleRating }
+    private var sparkline: [Int] { isGames ? gameSparkline : puzzleSparkline }
 
     private var remaining: Int { max(0, store.activeTarget - solved) }
     private var total: Int { solved + failed }
@@ -23,6 +38,7 @@ struct DashboardView: View {
     }
 
     private var isGames: Bool { store.goalMode == .games }
+    private var bothGoalsEnabled: Bool { store.puzzleGoalEnabled && store.gameGoalEnabled }
 
     private var ratingLabel: String {
         isGames ? store.gameTimeClass.ratingLabel : "PUZZLE RATING"
@@ -48,6 +64,11 @@ struct DashboardView: View {
                     .kerning(3)
 
                     Spacer()
+
+                    // Games/Puzzles toggle (only if both goals enabled)
+                    if bothGoalsEnabled {
+                        compactGoalToggle
+                    }
 
                     // Refresh
                     Button {
@@ -108,9 +129,37 @@ struct DashboardView: View {
         }
         .background(SFColor.s2)
         .refreshable { await loadStats(showLoading: false) }
-        .task(id: "\(store.username)-\(store.goalMode.rawValue)-\(store.gameTimeClass.rawValue)") { await loadStats() }
+        .task(id: "\(store.username)-\(store.gameTimeClass.rawValue)") { await loadStats() }
         .toolbar(.hidden, for: .navigationBar)
         }
+    }
+
+    // MARK: - Compact Goal Mode Toggle
+
+    private var compactGoalToggle: some View {
+        HStack(spacing: 0) {
+            compactToggleButton(.games, icon: "flag.pattern.checkered")
+            compactToggleButton(.puzzles, icon: "puzzlepiece.fill")
+        }
+        .background(RoundedRectangle(cornerRadius: 9).fill(SFColor.s3))
+        .overlay(RoundedRectangle(cornerRadius: 9).stroke(SFColor.border, lineWidth: 1))
+        .padding(.trailing, 8)
+    }
+
+    private func compactToggleButton(_ mode: GoalMode, icon: String) -> some View {
+        Button {
+            store.goalMode = mode
+        } label: {
+            Image(systemName: icon)
+                .font(.system(size: 10))
+                .foregroundColor(store.goalMode == mode ? SFColor.void_ : SFColor.ivory3)
+                .frame(width: 30, height: 30)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(store.goalMode == mode ? SFColor.amber : Color.clear)
+                )
+        }
+        .padding(2)
     }
 
     private var heroCard: some View {
@@ -240,11 +289,55 @@ struct DashboardView: View {
                     .font(.system(size: 9, design: .monospaced))
                     .foregroundColor(SFColor.ivory3)
             }
+
+            // Divider + embedded stepper
+            Rectangle().fill(SFColor.border).frame(height: 1)
+                .padding(.vertical, 10)
+
+            HStack {
+                Text("Goal")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(SFColor.ivory3)
+                Spacer()
+                HStack(spacing: 7) {
+                    StepperButton(symbol: "minus") {
+                        if currentTarget > 1 {
+                            setCurrentTarget(currentTarget - 1)
+                            WidgetCenter.shared.reloadAllTimelines()
+                        }
+                    }
+
+                    Text("\(currentTarget)")
+                        .font(.system(size: 18, weight: .bold, design: .monospaced))
+                        .foregroundColor(SFColor.amber)
+                        .frame(width: 36)
+                        .multilineTextAlignment(.center)
+
+                    StepperButton(symbol: "plus") {
+                        if currentTarget < 999 {
+                            setCurrentTarget(currentTarget + 1)
+                            WidgetCenter.shared.reloadAllTimelines()
+                        }
+                    }
+                }
+            }
         }
         .padding(.horizontal, 15)
         .padding(.vertical, 13)
         .background(RoundedRectangle(cornerRadius: 13).fill(SFColor.s3))
         .overlay(RoundedRectangle(cornerRadius: 13).stroke(SFColor.border, lineWidth: 1))
+    }
+
+    private var currentTarget: Int {
+        isGames ? store.dailyGameTarget : store.dailyPuzzleTarget
+    }
+
+    private func setCurrentTarget(_ value: Int) {
+        if isGames {
+            store.dailyGameTarget = value
+        } else {
+            store.dailyPuzzleTarget = value
+        }
     }
 
     private func avatarView(size: CGFloat) -> some View {
@@ -336,22 +429,43 @@ struct DashboardView: View {
         if showLoading { isLoading = true }
         errorMessage = nil
         do {
-            async let fetch = ChessComService.shared.fetchTodayStats(store.username, mode: store.goalMode, timeClass: store.gameTimeClass)
             async let profileFetch = ChessComService.shared.fetchProfile(store.username)
-            async let sparklineFetch = loadSparkline()
             async let delay: () = Task.sleep(nanoseconds: 150_000_000)
-            let result = try await fetch
+
+            // Fetch both enabled modes in parallel
+            async let puzzleFetch: (solved: Int, failed: Int, rating: Int?)? = store.puzzleGoalEnabled
+                ? try await ChessComService.shared.fetchTodayStats(store.username, mode: .puzzles, timeClass: store.gameTimeClass)
+                : nil
+            async let gameFetch: (solved: Int, failed: Int, rating: Int?)? = store.gameGoalEnabled
+                ? try await ChessComService.shared.fetchTodayStats(store.username, mode: .games, timeClass: store.gameTimeClass)
+                : nil
+            async let puzzleSparkFetch: [Int] = store.puzzleGoalEnabled
+                ? await loadSparkline(mode: .puzzles)
+                : Array(repeating: 0, count: 7)
+            async let gameSparkFetch: [Int] = store.gameGoalEnabled
+                ? await loadSparkline(mode: .games)
+                : Array(repeating: 0, count: 7)
+
+            if let pResult = try await puzzleFetch {
+                puzzleSolved = pResult.solved
+                puzzleFailed = pResult.failed
+                puzzleRating = pResult.rating
+            }
+            if let gResult = try await gameFetch {
+                gameSolved = gResult.solved
+                gameFailed = gResult.failed
+                gameRating = gResult.rating
+            }
             profile = try? await profileFetch
-            sparkline = await sparklineFetch
+            puzzleSparkline = await puzzleSparkFetch
+            gameSparkline = await gameSparkFetch
             _ = try? await delay
-            solved = result.solved
-            failed = result.failed
-            rating = result.rating
+
             WidgetCenter.shared.reloadAllTimelines()
-            NotificationService.shared.updateDailyReminder(
-                solved: solved, target: store.activeTarget,
-                enabled: store.dailyReminderEnabled,
-                mode: store.goalMode
+            NotificationService.shared.updateCombinedReminder(
+                puzzleSolved: puzzleSolved, puzzleTarget: store.dailyPuzzleTarget, puzzleEnabled: store.puzzleGoalEnabled,
+                gameSolved: gameSolved, gameTarget: store.dailyGameTarget, gameEnabled: store.gameGoalEnabled,
+                reminderEnabled: store.dailyReminderEnabled
             )
         } catch {
             errorMessage = error.localizedDescription
@@ -359,11 +473,11 @@ struct DashboardView: View {
         isLoading = false
     }
 
-    private func loadSparkline() async -> [Int] {
+    private func loadSparkline(mode: GoalMode) async -> [Int] {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
 
-        if store.goalMode == .puzzles {
+        if mode == .puzzles {
             guard let chart = try? await ChessComService.shared.fetchTacticsChart(store.username, daysAgo: 7) else {
                 return Array(repeating: 0, count: 7)
             }

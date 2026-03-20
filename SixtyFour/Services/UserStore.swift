@@ -34,6 +34,14 @@ final class UserStore: ObservableObject {
         didSet { defaults.set(dailyGameTarget, forKey: "dailyGameTarget") }
     }
 
+    @Published var puzzleGoalEnabled: Bool {
+        didSet { defaults.set(puzzleGoalEnabled, forKey: "puzzleGoalEnabled") }
+    }
+
+    @Published var gameGoalEnabled: Bool {
+        didSet { defaults.set(gameGoalEnabled, forKey: "gameGoalEnabled") }
+    }
+
     var activeTarget: Int {
         switch goalMode {
         case .puzzles: return dailyPuzzleTarget
@@ -55,6 +63,8 @@ final class UserStore: ObservableObject {
         self.goalMode = GoalMode(rawValue: defaults.string(forKey: "goalMode") ?? "") ?? .games
         self.gameTimeClass = TimeClass(rawValue: defaults.string(forKey: "gameTimeClass") ?? "") ?? .blitz
         self.dailyGameTarget = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
+        self.puzzleGoalEnabled = defaults.object(forKey: "puzzleGoalEnabled") as? Bool ?? true
+        self.gameGoalEnabled = defaults.object(forKey: "gameGoalEnabled") as? Bool ?? true
     }
 
     func reset() {
@@ -63,6 +73,8 @@ final class UserStore: ObservableObject {
         dailyGameTarget = 3
         goalMode = .games
         gameTimeClass = .blitz
+        puzzleGoalEnabled = true
+        gameGoalEnabled = true
         NotificationService.shared.cancelAll()
     }
 }

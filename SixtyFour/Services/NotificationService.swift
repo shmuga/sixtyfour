@@ -62,6 +62,54 @@ final class NotificationService {
         center.add(request)
     }
 
+    /// Schedule a combined reminder that fires if ANY enabled goal is incomplete.
+    func updateCombinedReminder(
+        puzzleSolved: Int, puzzleTarget: Int, puzzleEnabled: Bool,
+        gameSolved: Int, gameTarget: Int, gameEnabled: Bool,
+        reminderEnabled: Bool
+    ) {
+        center.removePendingNotificationRequests(withIdentifiers: [dailyReminderID])
+
+        guard reminderEnabled else { return }
+
+        let puzzleRemaining = puzzleEnabled ? max(0, puzzleTarget - puzzleSolved) : 0
+        let gameRemaining = gameEnabled ? max(0, gameTarget - gameSolved) : 0
+
+        guard puzzleRemaining > 0 || gameRemaining > 0 else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Daily Goal Reminder"
+
+        if puzzleRemaining > 0 && gameRemaining > 0 {
+            content.body = "\(puzzleRemaining) puzzle\(puzzleRemaining == 1 ? "" : "s") and \(gameRemaining) game\(gameRemaining == 1 ? "" : "s") left to reach your daily goal!"
+        } else if puzzleRemaining > 0 {
+            content.body = "\(puzzleRemaining) puzzle\(puzzleRemaining == 1 ? "" : "s") left to reach your daily goal!"
+        } else {
+            content.body = "\(gameRemaining) game\(gameRemaining == 1 ? "" : "s") left to reach your daily goal!"
+        }
+
+        content.sound = .default
+
+        let trigger: UNNotificationTrigger
+        if debugMode {
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        } else {
+            let now = Date()
+            var components = Calendar.current.dateComponents([.year, .month, .day], from: now)
+            components.hour = 19
+            components.minute = 0
+
+            guard let fireDate = Calendar.current.date(from: components),
+                  fireDate > now else { return }
+
+            let triggerComponents = Calendar.current.dateComponents([.hour, .minute], from: fireDate)
+            trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: false)
+        }
+
+        let request = UNNotificationRequest(identifier: dailyReminderID, content: content, trigger: trigger)
+        center.add(request)
+    }
+
     func cancelAll() {
         center.removeAllPendingNotificationRequests()
     }
