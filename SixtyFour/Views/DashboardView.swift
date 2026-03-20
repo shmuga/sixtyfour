@@ -107,7 +107,7 @@ struct DashboardView: View {
             .padding(.top, 17)
         }
         .background(SFColor.s2)
-        .refreshable { await loadStats() }
+        .refreshable { await loadStats(showLoading: false) }
         .task(id: "\(store.username)-\(store.goalMode.rawValue)-\(store.gameTimeClass.rawValue)") { await loadStats() }
         .toolbar(.hidden, for: .navigationBar)
         }
@@ -332,8 +332,8 @@ struct DashboardView: View {
         return "\(years)yr member"
     }
 
-    private func loadStats() async {
-        isLoading = true
+    private func loadStats(showLoading: Bool = true) async {
+        if showLoading { isLoading = true }
         errorMessage = nil
         do {
             async let fetch = ChessComService.shared.fetchTodayStats(store.username, mode: store.goalMode, timeClass: store.gameTimeClass)

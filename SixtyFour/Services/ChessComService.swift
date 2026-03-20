@@ -25,6 +25,7 @@ final class ChessComService {
     init() {
         let config = URLSessionConfiguration.default
         config.httpAdditionalHeaders = ["User-Agent": "SixtyFour/1.0"]
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
         self.session = URLSession(configuration: config)
     }
 
