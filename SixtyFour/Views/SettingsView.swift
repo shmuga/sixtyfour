@@ -17,48 +17,58 @@ struct SettingsView: View {
                 // Account section
                 sectionLabel(icon: "person", text: "ACCOUNT")
 
-                CfgRow {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Username")
-                            .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(SFColor.ivory)
-                        Text("@\(store.username)")
+                HStack(alignment: .top, spacing: 8) {
+                    CfgRow {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Username")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(SFColor.ivory)
+                            Text("@\(store.username)")
+                                .font(.system(size: 10, design: .monospaced))
+                                .foregroundColor(SFColor.ivory3)
+                        }
+                    } trailing: {
+                        Text("chess.com \u{2197}")
                             .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(SFColor.ivory3)
+                            .foregroundColor(SFColor.amber)
                     }
-                } trailing: {
-                    Text("chess.com \u{2197}")
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundColor(SFColor.amber)
+
+                    Button {
+                        store.reset()
+                        WidgetCenter.shared.reloadAllTimelines()
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.system(size: 13))
+                            .foregroundColor(SFColor.red)
+                            .frame(maxHeight: .infinity)
+                            .frame(width: 44)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(SFColor.red.opacity(0.1)))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(SFColor.red.opacity(0.2), lineWidth: 1))
+                    }
+                    .padding(.bottom, 7)
                 }
 
                 // Goals section
                 sectionLabel(icon: "flag", text: "GOALS")
 
-                ToggleRow(label: "Track puzzles", isOn: Binding(
-                    get: { store.puzzleGoalEnabled },
-                    set: { newVal in
-                        // Ensure at least one goal stays enabled
-                        if !newVal && !store.gameGoalEnabled { return }
-                        store.puzzleGoalEnabled = newVal
-                        if !newVal && store.goalMode == .puzzles {
-                            store.goalMode = .games
-                        }
-                        WidgetCenter.shared.reloadAllTimelines()
+                CfgRow {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Tracking")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(SFColor.ivory)
+                        Text(goalTrackingLabel)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(SFColor.ivory3)
                     }
-                ))
-
-                ToggleRow(label: "Track games", isOn: Binding(
-                    get: { store.gameGoalEnabled },
-                    set: { newVal in
-                        if !newVal && !store.puzzleGoalEnabled { return }
-                        store.gameGoalEnabled = newVal
-                        if !newVal && store.goalMode == .games {
-                            store.goalMode = .puzzles
-                        }
-                        WidgetCenter.shared.reloadAllTimelines()
+                } trailing: {
+                    HStack(spacing: 0) {
+                        goalOptionButton(.puzzles, label: "Puz")
+                        goalOptionButton(.games, label: "Gam")
+                        goalOptionButton(.both, label: "Both")
                     }
-                ))
+                    .background(RoundedRectangle(cornerRadius: 8).fill(SFColor.s4))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(SFColor.border, lineWidth: 1))
+                }
 
                 // Time class
                 CfgRow {
@@ -92,27 +102,60 @@ struct SettingsView: View {
                         }
                     }
 
-                // Sign out
-                Button {
-                    store.reset()
-                    WidgetCenter.shared.reloadAllTimelines()
-                } label: {
-                    Text("SIGN OUT")
-                        .font(.system(size: 11, weight: .bold, design: .monospaced))
-                        .foregroundColor(SFColor.red)
-                        .kerning(2)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 13)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(SFColor.red.opacity(0.12)))
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(SFColor.red.opacity(0.2), lineWidth: 1))
-                }
-                .padding(.top, 24)
+
             }
             .padding(.horizontal, 17)
             .padding(.top, 17)
             .padding(.bottom, 20)
         }
         .background(SFColor.s2)
+    }
+
+    private enum GoalOption { case puzzles, games, both }
+
+    private var currentGoalOption: GoalOption {
+        if store.puzzleGoalEnabled && store.gameGoalEnabled { return .both }
+        if store.gameGoalEnabled { return .games }
+        return .puzzles
+    }
+
+    private var goalTrackingLabel: String {
+        switch currentGoalOption {
+        case .puzzles: return "puzzles only"
+        case .games: return "games only"
+        case .both: return "puzzles & games"
+        }
+    }
+
+    private func goalOptionButton(_ option: GoalOption, label: String) -> some View {
+        let selected = currentGoalOption == option
+        return Button {
+            switch option {
+            case .puzzles:
+                store.puzzleGoalEnabled = true
+                store.gameGoalEnabled = false
+                store.goalMode = .puzzles
+            case .games:
+                store.puzzleGoalEnabled = false
+                store.gameGoalEnabled = true
+                store.goalMode = .games
+            case .both:
+                store.puzzleGoalEnabled = true
+                store.gameGoalEnabled = true
+            }
+            WidgetCenter.shared.reloadAllTimelines()
+        } label: {
+            Text(label)
+                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                .foregroundColor(selected ? SFColor.void_ : SFColor.ivory3)
+                .kerning(0.5)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 7)
+                .background(
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(selected ? SFColor.amber : Color.clear)
+                )
+        }
     }
 
     private func timeClassButton(_ tc: TimeClass) -> some View {
