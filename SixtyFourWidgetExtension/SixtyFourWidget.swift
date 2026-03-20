@@ -188,6 +188,117 @@ struct GameGoalWidget: Widget {
     }
 }
 
+// MARK: - Combined Goal Widget
+
+struct CombinedGoalEntry: TimelineEntry {
+    let date: Date
+    let puzzleSolved: Int
+    let puzzleFailed: Int
+    let puzzleTarget: Int
+    let puzzleRating: Int?
+    let gameSolved: Int
+    let gameFailed: Int
+    let gameTarget: Int
+    let gameRating: Int?
+    let username: String
+    let isPlaceholder: Bool
+
+    var puzzleRemaining: Int { max(0, puzzleTarget - puzzleSolved) }
+    var gameRemaining: Int { max(0, gameTarget - gameSolved) }
+    var puzzleProgress: Double {
+        guard puzzleTarget > 0 else { return 0 }
+        return min(1.0, Double(puzzleSolved) / Double(puzzleTarget))
+    }
+    var gameProgress: Double {
+        guard gameTarget > 0 else { return 0 }
+        return min(1.0, Double(gameSolved) / Double(gameTarget))
+    }
+
+    static let placeholder = CombinedGoalEntry(
+        date: .now,
+        puzzleSolved: 7, puzzleFailed: 3, puzzleTarget: 10, puzzleRating: 1511,
+        gameSolved: 2, gameFailed: 1, gameTarget: 3, gameRating: 1247,
+        username: "player", isPlaceholder: true
+    )
+}
+
+struct CombinedGoalTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> CombinedGoalEntry {
+        .placeholder
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (CombinedGoalEntry) -> Void) {
+        if context.isPreview {
+            completion(.placeholder)
+            return
+        }
+        fetchEntry { completion($0) }
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<CombinedGoalEntry>) -> Void) {
+        fetchEntry { entry in
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: entry.date)!
+            completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+        }
+    }
+
+    private func fetchEntry(completion: @escaping (CombinedGoalEntry) -> Void) {
+        let defaults = UserDefaults(suiteName: UserStore.appGroupID) ?? .standard
+        let username = defaults.string(forKey: "username") ?? ""
+        let puzzleTarget = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
+        let gameTarget = defaults.object(forKey: "dailyGameTarget") as? Int ?? 3
+        let timeClassStr = defaults.string(forKey: "gameTimeClass") ?? "blitz"
+        let timeClass = TimeClass(rawValue: timeClassStr) ?? .blitz
+
+        guard !username.isEmpty else {
+            completion(CombinedGoalEntry(
+                date: .now,
+                puzzleSolved: 0, puzzleFailed: 0, puzzleTarget: puzzleTarget, puzzleRating: nil,
+                gameSolved: 0, gameFailed: 0, gameTarget: gameTarget, gameRating: nil,
+                username: "", isPlaceholder: false
+            ))
+            return
+        }
+
+        Task {
+            var pSolved = 0, pFailed = 0, pRating: Int?
+            var gSolved = 0, gFailed = 0, gRating: Int?
+
+            if let pResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz) {
+                pSolved = pResult.solved
+                pFailed = pResult.failed
+                pRating = pResult.rating
+            }
+            if let gResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .games, timeClass: timeClass) {
+                gSolved = gResult.solved
+                gFailed = gResult.failed
+                gRating = gResult.rating
+            }
+
+            completion(CombinedGoalEntry(
+                date: .now,
+                puzzleSolved: pSolved, puzzleFailed: pFailed, puzzleTarget: puzzleTarget, puzzleRating: pRating,
+                gameSolved: gSolved, gameFailed: gFailed, gameTarget: gameTarget, gameRating: gRating,
+                username: username, isPlaceholder: false
+            ))
+        }
+    }
+}
+
+struct CombinedGoalWidget: Widget {
+    let kind = "CombinedGoalWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: CombinedGoalTimelineProvider()) { entry in
+            CombinedGoalWidgetView(entry: entry)
+                .containerBackground(Color(hex: 0x0D0D0F), for: .widget)
+        }
+        .configurationDisplayName("Both Goals")
+        .description("Track daily game and puzzle goals together.")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
 // MARK: - Rating Widget
 
 struct WidgetRatingEntry: TimelineEntry {
@@ -288,6 +399,7 @@ struct SixtyFourWidgetBundle: WidgetBundle {
     var body: some Widget {
         PuzzleProgressWidget()
         GameGoalWidget()
+        CombinedGoalWidget()
         RatingWidget()
     }
 }

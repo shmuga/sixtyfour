@@ -343,6 +343,129 @@ struct RatingWidgetView: View {
     }
 }
 
+// MARK: - Combined Goal Widget View
+
+struct CombinedGoalWidgetView: View {
+    let entry: CombinedGoalEntry
+
+    private let gameColor = Color(hex: 0xF5A623)  // amber for games
+    private let puzzleColor = Color(hex: 0x2ECC71) // green for puzzles
+    private let ivory = Color(hex: 0xECE8DF)
+    private let muted = Color(hex: 0x555049)
+
+    private var knightImage: some View {
+        Image("knight")
+            .renderingMode(.template)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+    }
+
+    var body: some View {
+        ZStack {
+            knightImage
+                .foregroundColor(Color.white.opacity(0.05))
+                .frame(height: 140)
+                .offset(x: 40)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+
+            HStack(spacing: 0) {
+                // Concentric rings
+                ZStack {
+                    // Outer ring — games
+                    ActivityRing(
+                        progress: entry.gameProgress,
+                        color: gameColor,
+                        lineWidth: 9,
+                        size: 120
+                    )
+                    // Inner ring — puzzles
+                    ActivityRing(
+                        progress: entry.puzzleProgress,
+                        color: puzzleColor,
+                        lineWidth: 8,
+                        size: 96
+                    )
+
+                    // Center — total remaining
+                    let totalRemaining = entry.gameRemaining + entry.puzzleRemaining
+                    if totalRemaining == 0 {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(puzzleColor)
+                    } else {
+                        VStack(spacing: 0) {
+                            Text("\(totalRemaining)")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(ivory)
+                            Text("LEFT")
+                                .font(.system(size: 6, weight: .medium, design: .monospaced))
+                                .foregroundColor(muted)
+                                .kerning(1)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.trailing, 30)
+
+                // Right side — stats
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("SIXTYFOUR")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(gameColor.opacity(0.75))
+                        .kerning(1.5)
+                        .lineLimit(1)
+
+                    Spacer(minLength: 0)
+
+                    // Games stats
+                    HStack(spacing: 4) {
+                        Circle().fill(gameColor).frame(width: 6, height: 6)
+                        Text("GAMES")
+                            .font(.system(size: 7, weight: .bold, design: .monospaced))
+                            .foregroundColor(muted)
+                            .kerning(0.5)
+                    }
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("\(entry.gameSolved)/\(entry.gameTarget)")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(gameColor)
+                        Text("\(entry.gameRemaining) left")
+                            .font(.system(size: 8, design: .monospaced))
+                            .foregroundColor(muted)
+                    }
+
+                    Spacer(minLength: 2)
+
+                    // Puzzles stats
+                    HStack(spacing: 4) {
+                        Circle().fill(puzzleColor).frame(width: 6, height: 6)
+                        Text("PUZZLES")
+                            .font(.system(size: 7, weight: .bold, design: .monospaced))
+                            .foregroundColor(muted)
+                            .kerning(0.5)
+                    }
+                    HStack(alignment: .lastTextBaseline, spacing: 4) {
+                        Text("\(entry.puzzleSolved)/\(entry.puzzleTarget)")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(puzzleColor)
+                        Text("\(entry.puzzleRemaining) left")
+                            .font(.system(size: 8, design: .monospaced))
+                            .foregroundColor(muted)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.leading, 14)
+            .padding(.trailing, 16)
+            .padding(.vertical, 12)
+        }
+        .clipped()
+        .widgetURL(URL(string: "sixtyfour://home")!)
+    }
+}
+
 struct WidgetStatRow: View {
     let color: Color
     let value: String
