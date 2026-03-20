@@ -127,6 +127,7 @@ struct DashboardView: View {
             .padding(.horizontal, 17)
             .padding(.top, 17)
         }
+        .scrollBounceBehavior(.always)
         .background(SFColor.s2)
         .refreshable { await loadStats(showLoading: false) }
         .task(id: "\(store.username)-\(store.gameTimeClass.rawValue)") { await loadStats() }
