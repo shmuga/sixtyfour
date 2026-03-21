@@ -18,7 +18,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.markorel.sixtyfour
       SWIFT_VERSION: "5.9"
       MARKETING_VERSION: "1.0.0"
-      CURRENT_PROJECT_VERSION: 2
+      CURRENT_PROJECT_VERSION: 9
       CODE_SIGN_ENTITLEMENTS: SixtyFour/SixtyFour.entitlements
       GENERATE_INFOPLIST_FILE: "YES"
       INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
@@ -37,7 +37,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.markorel.sixtyfour.widget
       SWIFT_VERSION: "5.9"
       MARKETING_VERSION: "1.0.0"
-      CURRENT_PROJECT_VERSION: 2
+      CURRENT_PROJECT_VERSION: 9
       CODE_SIGN_ENTITLEMENTS: SixtyFourWidgetExtension/SixtyFourWidgetExtension.entitlements
       INFOPLIST_FILE: SixtyFourWidgetExtension/Info.plist
 

@@ -31,7 +31,12 @@ enum ChessServiceError: LocalizedError {
 
 enum ChessServiceResolver {
     static var current: ChessService {
-        switch UserStore.shared.platform {
+        // Read platform directly from shared UserDefaults so this works
+        // in both the main app and the widget extension process.
+        let defaults = UserDefaults(suiteName: UserStore.appGroupID)
+        let platformStr = defaults?.string(forKey: "platform") ?? ""
+        let platform = Platform(rawValue: platformStr) ?? .chesscom
+        switch platform {
         case .chesscom: return ChessComService.shared
         case .lichess: return LichessService.shared
         }
