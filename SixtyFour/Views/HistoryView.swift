@@ -161,13 +161,13 @@ struct HistoryView: View {
         isLoading = true
         if isGames {
             do {
-                gameDayStats = try await ChessComService.shared.fetchGameHistory(store.username, timeClass: store.gameTimeClass, days: 30)
+                gameDayStats = try await ChessServiceResolver.current.fetchGameHistory(store.username, timeClass: store.gameTimeClass, days: 30)
             } catch {
                 gameDayStats = []
             }
         } else {
             do {
-                let chart = try await ChessComService.shared.fetchTacticsChart(store.username, daysAgo: 30)
+                let chart = try await ChessServiceResolver.current.fetchTacticsChart(store.username, daysAgo: 30)
                 dailyStats = chart.dailyStats.filter { $0.totalPassed > 0 || $0.totalFailed > 0 }
             } catch {
                 dailyStats = []

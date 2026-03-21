@@ -6,6 +6,14 @@ final class UserStore: ObservableObject {
 
     private let defaults: UserDefaults
 
+    @Published var platform: Platform {
+        didSet { defaults.set(platform.rawValue, forKey: "platform") }
+    }
+
+    @Published var lichessAccessToken: String? {
+        didSet { defaults.set(lichessAccessToken, forKey: "lichessAccessToken") }
+    }
+
     @Published var username: String {
         didSet { defaults.set(username, forKey: "username") }
     }
@@ -56,6 +64,8 @@ final class UserStore: ObservableObject {
     init() {
         let defaults = UserDefaults(suiteName: Self.appGroupID) ?? .standard
         self.defaults = defaults
+        self.platform = Platform(rawValue: defaults.string(forKey: "platform") ?? "") ?? .chesscom
+        self.lichessAccessToken = defaults.string(forKey: "lichessAccessToken")
         self.username = defaults.string(forKey: "username") ?? ""
         self.dailyPuzzleTarget = defaults.object(forKey: "dailyPuzzleTarget") as? Int ?? 10
         self.dailyReminderEnabled = defaults.object(forKey: "dailyReminderEnabled") as? Bool ?? true
@@ -69,6 +79,8 @@ final class UserStore: ObservableObject {
 
     func reset() {
         username = ""
+        platform = .chesscom
+        lichessAccessToken = nil
         dailyPuzzleTarget = 10
         dailyGameTarget = 3
         goalMode = .games

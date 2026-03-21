@@ -430,15 +430,15 @@ struct DashboardView: View {
         if showLoading { isLoading = true }
         errorMessage = nil
         do {
-            async let profileFetch = ChessComService.shared.fetchProfile(store.username)
+            async let profileFetch = ChessServiceResolver.current.fetchProfile(store.username)
             async let delay: () = Task.sleep(nanoseconds: 150_000_000)
 
             // Fetch both enabled modes in parallel
             async let puzzleFetch: (solved: Int, failed: Int, rating: Int?)? = store.puzzleGoalEnabled
-                ? try await ChessComService.shared.fetchTodayStats(store.username, mode: .puzzles, timeClass: store.gameTimeClass)
+                ? try await ChessServiceResolver.current.fetchTodayStats(store.username, mode: .puzzles, timeClass: store.gameTimeClass)
                 : nil
             async let gameFetch: (solved: Int, failed: Int, rating: Int?)? = store.gameGoalEnabled
-                ? try await ChessComService.shared.fetchTodayStats(store.username, mode: .games, timeClass: store.gameTimeClass)
+                ? try await ChessServiceResolver.current.fetchTodayStats(store.username, mode: .games, timeClass: store.gameTimeClass)
                 : nil
             async let puzzleSparkFetch: [Int] = store.puzzleGoalEnabled
                 ? await loadSparkline(mode: .puzzles)
@@ -479,7 +479,7 @@ struct DashboardView: View {
         let today = cal.startOfDay(for: Date())
 
         if mode == .puzzles {
-            guard let chart = try? await ChessComService.shared.fetchTacticsChart(store.username, daysAgo: 7) else {
+            guard let chart = try? await ChessServiceResolver.current.fetchTacticsChart(store.username, daysAgo: 7) else {
                 return Array(repeating: 0, count: 7)
             }
             var result = [Int](repeating: 0, count: 7)
@@ -493,7 +493,7 @@ struct DashboardView: View {
             }
             return result
         } else {
-            guard let history = try? await ChessComService.shared.fetchGameHistory(store.username, timeClass: store.gameTimeClass, days: 7) else {
+            guard let history = try? await ChessServiceResolver.current.fetchGameHistory(store.username, timeClass: store.gameTimeClass, days: 7) else {
                 return Array(repeating: 0, count: 7)
             }
             var result = [Int](repeating: 0, count: 7)

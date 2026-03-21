@@ -75,7 +75,7 @@ struct PuzzleTimelineProvider: TimelineProvider {
 
         Task {
             do {
-                let result = try await ChessComService.shared.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz)
+                let result = try await ChessServiceResolver.current.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz)
                 completion(PuzzleEntry(
                     date: .now,
                     solved: result.solved,
@@ -152,7 +152,7 @@ struct GameTimelineProvider: TimelineProvider {
 
         Task {
             do {
-                let result = try await ChessComService.shared.fetchTodayStats(username, mode: .games, timeClass: timeClass)
+                let result = try await ChessServiceResolver.current.fetchTodayStats(username, mode: .games, timeClass: timeClass)
                 completion(PuzzleEntry(
                     date: .now,
                     solved: result.solved,
@@ -264,12 +264,12 @@ struct CombinedGoalTimelineProvider: TimelineProvider {
             var pSolved = 0, pFailed = 0, pRating: Int?
             var gSolved = 0, gFailed = 0, gRating: Int?
 
-            if let pResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz) {
+            if let pResult = try? await ChessServiceResolver.current.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz) {
                 pSolved = pResult.solved
                 pFailed = pResult.failed
                 pRating = pResult.rating
             }
-            if let gResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .games, timeClass: timeClass) {
+            if let gResult = try? await ChessServiceResolver.current.fetchTodayStats(username, mode: .games, timeClass: timeClass) {
                 gSolved = gResult.solved
                 gFailed = gResult.failed
                 gRating = gResult.rating
@@ -356,7 +356,7 @@ struct RatingTimelineProvider: TimelineProvider {
 
         Task {
             do {
-                let stats = try await ChessComService.shared.fetchFullStats(username)
+                let stats = try await ChessServiceResolver.current.fetchFullStats(username)
                 let category = stats.category(for: timeClass)
                 completion(WidgetRatingEntry(
                     date: .now,

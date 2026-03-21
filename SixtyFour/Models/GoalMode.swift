@@ -29,4 +29,13 @@ enum TimeClass: String, Codable, CaseIterable {
         case .daily: return "chess_daily"
         }
     }
+
+    var lichessPerf: String {
+        switch self {
+        case .bullet: return "bullet"
+        case .blitz: return "blitz"
+        case .rapid: return "rapid"
+        case .daily: return "correspondence"
+        }
+    }
 }

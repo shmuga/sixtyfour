@@ -1,3 +1,4 @@
+import AuthenticationServices
 import SwiftUI
 
 struct ChessboardIcon: View {
@@ -25,6 +26,7 @@ struct ChessboardIcon: View {
 }
 
 enum OnboardingStep {
+    case platformSelect
     case username
     case goalType
     case gameGoal
@@ -50,8 +52,9 @@ struct OnboardingView: View {
     @State private var dailyPuzzleTarget = 10
     @State private var remindersEnabled = true
     @State private var isValidating = false
+    @State private var isAuthenticating = false
     @State private var errorMessage: String?
-    @State private var step: OnboardingStep = .username
+    @State private var step: OnboardingStep = .platformSelect
 
     /// The next step after goal type selection
     private var stepAfterGoalType: OnboardingStep {
@@ -84,7 +87,7 @@ struct OnboardingView: View {
                 .font(.system(size: 28, weight: .bold))
                 .kerning(4)
 
-                Text("CHESS.COM  PUZZLE  TRACKER")
+                Text("CHESS  TRACKER")
                     .font(.system(size: 8, weight: .regular, design: .monospaced))
                     .foregroundColor(SFColor.ivory3)
                     .kerning(1.5)
@@ -92,24 +95,26 @@ struct OnboardingView: View {
                     .padding(.bottom, 28)
 
                 switch step {
-                case .username:      usernameContent
-                case .goalType:      goalTypeContent
-                case .gameGoal:      gameGoalContent
-                case .gameTimeClass: gameTimeClassContent
-                case .puzzleGoal:    puzzleGoalContent
-                case .reminders:     remindersContent
+                case .platformSelect: platformSelectContent
+                case .username:       usernameContent
+                case .goalType:       goalTypeContent
+                case .gameGoal:       gameGoalContent
+                case .gameTimeClass:  gameTimeClassContent
+                case .puzzleGoal:     puzzleGoalContent
+                case .reminders:      remindersContent
                 }
 
                 Spacer()
 
                 VStack(spacing: 0) {
                     switch step {
-                    case .username:      usernameBottom
-                    case .goalType:      goalTypeBottom
-                    case .gameGoal:      gameGoalBottom
-                    case .gameTimeClass: gameTimeClassBottom
-                    case .puzzleGoal:    puzzleGoalBottom
-                    case .reminders:     remindersBottom
+                    case .platformSelect: platformSelectBottom
+                    case .username:       usernameBottom
+                    case .goalType:       goalTypeBottom
+                    case .gameGoal:       gameGoalBottom
+                    case .gameTimeClass:  gameTimeClassBottom
+                    case .puzzleGoal:     puzzleGoalBottom
+                    case .reminders:      remindersBottom
                     }
                 }
                 .padding(.bottom, 30)
@@ -117,6 +122,65 @@ struct OnboardingView: View {
         }
         .preferredColorScheme(.dark)
         .animation(.easeInOut(duration: 0.25), value: step)
+    }
+
+    // MARK: - Step 0: Platform Selection
+
+    private var platformSelectContent: some View {
+        VStack(spacing: 0) {
+            Text("Choose your platform")
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundColor(SFColor.ivory3)
+
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundColor(SFColor.red)
+                    .padding(.top, 6)
+            }
+        }
+    }
+
+    private var platformSelectBottom: some View {
+        VStack(spacing: 10) {
+            onboardingButton(label: "CONTINUE WITH CHESS.COM", isLoading: false, disabled: false) {
+                store.platform = .chesscom
+                errorMessage = nil
+                step = .username
+            }
+
+            Button {
+                Task { await authenticateWithLichess() }
+            } label: {
+                Group {
+                    if isAuthenticating {
+                        ProgressView()
+                            .tint(SFColor.amber)
+                    } else {
+                        Text("SIGN IN WITH LICHESS")
+                            .font(.system(size: 14, weight: .bold))
+                            .kerning(2.5)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+            }
+            .foregroundColor(SFColor.amber)
+            .background(
+                RoundedRectangle(cornerRadius: 11)
+                    .stroke(SFColor.amber, lineWidth: 1.5)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 11))
+            .disabled(isAuthenticating)
+            .opacity(isAuthenticating ? 0.5 : 1)
+            .padding(.horizontal, 32)
+
+            Text("Lichess requires sign-in for puzzle tracking")
+                .font(.system(size: 8, design: .monospaced))
+                .foregroundColor(SFColor.ivory3)
+                .padding(.top, 4)
+        }
+        .padding(.bottom, 30)
     }
 
     // MARK: - Step 1: Username
@@ -513,17 +577,38 @@ struct OnboardingView: View {
         errorMessage = nil
 
         do {
-            let valid = try await ChessComService.shared.validateUsername(trimmed)
+            let valid = try await ChessServiceResolver.current.validateUsername(trimmed)
             if valid {
                 step = .goalType
             } else {
-                errorMessage = "Username not found on chess.com"
+                errorMessage = "Username not found"
             }
         } catch {
             errorMessage = error.localizedDescription
         }
 
         isValidating = false
+    }
+
+    private func authenticateWithLichess() async {
+        isAuthenticating = true
+        errorMessage = nil
+
+        do {
+            let result = try await LichessAuthService.shared.authenticate()
+            store.platform = .lichess
+            store.lichessAccessToken = result.accessToken
+            username = result.username
+            step = .goalType
+        } catch {
+            if (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin {
+                // User cancelled, no error message needed
+            } else {
+                errorMessage = error.localizedDescription
+            }
+        }
+
+        isAuthenticating = false
     }
 
     private func finishOnboarding() {

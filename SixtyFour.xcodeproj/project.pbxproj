@@ -7,32 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01A1B2C3D4E5F6A7B8C9D001 /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */; };
-		01A1B2C3D4E5F6A7B8C9D002 /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */; };
-		01A1B2C3D4E5F6A7B8C9D003 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */; };
-		01A1B2C3D4E5F6A7B8C9D004 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */; };
 		03907135162CCF4FD1C48E6F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF929161CD33024591EE28 /* NotificationService.swift */; };
 		05A03092108285F6833202F1 /* PuzzleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41841BA5EBC93A3A837604CF /* PuzzleProgressView.swift */; };
+		093B5F4D310DDA75CB90B480 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A51C511795B1651B0BDAF9C /* GameStats.swift */; };
 		0FAA9135938609F7107BC6BD /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64AF929161CD33024591EE28 /* NotificationService.swift */; };
+		1B9EDB74D09A5BBE49ACAB65 /* GameStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A51C511795B1651B0BDAF9C /* GameStats.swift */; };
 		1D27A4F5E86A0EC256C857F9 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF5DAB1949D7E24F91E08D0 /* DashboardView.swift */; };
+		1F17EFB65C5E6CFF9F8BCA67 /* ChessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C1D5E988B04E3A6EF513DC /* ChessService.swift */; };
+		23893BA3C3C12CF926D28CDA /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187A70216733636E5264E498 /* GoalMode.swift */; };
 		27C26B6FCA7C9EF5777C5310 /* PuzzleStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1A9575C44DB3038636708 /* PuzzleStats.swift */; };
 		5276D3A41E14708D694FB22C /* SixtyFourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A0BDDFCEB62FF530B5731B /* SixtyFourApp.swift */; };
 		52A30681B0D059C5EB3CE63E /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */; };
+		5B435BA4FA53336B24B9C955 /* LichessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299553AC67CA42741D1F0170 /* LichessService.swift */; };
+		6215A8CFAA59E64F530D3A67 /* LichessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299553AC67CA42741D1F0170 /* LichessService.swift */; };
 		65FBF60D800A74BBBF049784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44BF458F5E7DD73A20D874F0 /* Assets.xcassets */; };
 		7A7F99D7D5A20BB044273066 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73241A650BBD19E524F2DB1B /* MainTabView.swift */; };
 		856E7F35E12C9E0A07DF38BC /* PuzzleStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD1A9575C44DB3038636708 /* PuzzleStats.swift */; };
+		998D34C57A368A9EC4E1CD36 /* LichessAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85214F8705F030453D9E7A62 /* LichessAuthService.swift */; };
 		9A96DB57AD0A4F6F72A384C6 /* SixtyFourWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6AD820C11C618CC4426BCC /* SixtyFourWidget.swift */; };
 		9D5EA02CB6200BC65715C5F9 /* UserStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */; };
+		9E7BFA4AFFD30F38CB936339 /* LichessAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85214F8705F030453D9E7A62 /* LichessAuthService.swift */; };
 		A4123FAD8E161D91F1761AC7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90FAB9E258066DFE8DDF1722 /* HistoryView.swift */; };
 		BD85CB182968DCD1F49A2053 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */; };
 		BFEA16859BF1AC1B48715125 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B463A7F854B35BE53A8A24F1 /* SettingsView.swift */; };
+		C61A5F02CB49F2316A0BB371 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61783E980B66685F5F272207 /* Platform.swift */; };
 		C69D35765787B1082430842F /* ChessComService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86451C487B4583C6D003BB /* ChessComService.swift */; };
+		CA52F5D868C5AEB20C2DAB26 /* GoalMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187A70216733636E5264E498 /* GoalMode.swift */; };
 		CBBD27823268B9CCE7493E40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96903E1F5BD36155984618A9 /* Assets.xcassets */; };
 		CC72228E910F0B821F21E092 /* SixtyFourWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D5970A55CC5DD5CADDA57FF8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD93325404C6E07E68CA3F13 /* OnboardingView.swift */; };
 		D93C2D12AC799429C33D2078 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B857FF55A6C6E8A6A68876 /* Theme.swift */; };
+		E517C67C3631C03D8DE2CE79 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61783E980B66685F5F272207 /* Platform.swift */; };
 		EB1C1742EDDFAE8101B3DC8C /* ChessComService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A86451C487B4583C6D003BB /* ChessComService.swift */; };
 		F731DF68FF540504837ECBB5 /* PlayerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */; };
+		FC895EB1DDCEB662A14A2E56 /* ChessService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C1D5E988B04E3A6EF513DC /* ChessService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,17 +68,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalMode.swift; sourceTree = "<group>"; };
-		01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStats.swift; sourceTree = "<group>"; };
 		0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserStore.swift; sourceTree = "<group>"; };
 		0F6AD820C11C618CC4426BCC /* SixtyFourWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixtyFourWidget.swift; sourceTree = "<group>"; };
+		187A70216733636E5264E498 /* GoalMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalMode.swift; sourceTree = "<group>"; };
+		299553AC67CA42741D1F0170 /* LichessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LichessService.swift; sourceTree = "<group>"; };
 		312C9ACC1049BA3DE21DB822 /* SixtyFourWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SixtyFourWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		37EA7A8D4677FAE0FDB142D8 /* SixtyFourWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SixtyFourWidgetExtension.entitlements; sourceTree = "<group>"; };
+		3A51C511795B1651B0BDAF9C /* GameStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStats.swift; sourceTree = "<group>"; };
 		41841BA5EBC93A3A837604CF /* PuzzleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleProgressView.swift; sourceTree = "<group>"; };
 		44BF458F5E7DD73A20D874F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		48C1D5E988B04E3A6EF513DC /* ChessService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessService.swift; sourceTree = "<group>"; };
+		61783E980B66685F5F272207 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
 		64AF929161CD33024591EE28 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6AFEB3E5EDD3062BD777C61E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		73241A650BBD19E524F2DB1B /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		85214F8705F030453D9E7A62 /* LichessAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LichessAuthService.swift; sourceTree = "<group>"; };
 		8A86451C487B4583C6D003BB /* ChessComService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessComService.swift; sourceTree = "<group>"; };
 		8BD1A9575C44DB3038636708 /* PuzzleStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleStats.swift; sourceTree = "<group>"; };
 		90FAB9E258066DFE8DDF1722 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
@@ -134,6 +146,9 @@
 			isa = PBXGroup;
 			children = (
 				8A86451C487B4583C6D003BB /* ChessComService.swift */,
+				48C1D5E988B04E3A6EF513DC /* ChessService.swift */,
+				85214F8705F030453D9E7A62 /* LichessAuthService.swift */,
+				299553AC67CA42741D1F0170 /* LichessService.swift */,
 				64AF929161CD33024591EE28 /* NotificationService.swift */,
 				0C56F2BF58B4EBEC82CFD5E1 /* UserStore.swift */,
 			);
@@ -155,8 +170,9 @@
 		D691E75B00F486D54EAD9CF6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				01A1B2C3D4E5F6A7B8C9D020 /* GameStats.swift */,
-				01A1B2C3D4E5F6A7B8C9D010 /* GoalMode.swift */,
+				3A51C511795B1651B0BDAF9C /* GameStats.swift */,
+				187A70216733636E5264E498 /* GoalMode.swift */,
+				61783E980B66685F5F272207 /* Platform.swift */,
 				9FCF915C46DF48C44CC4782C /* PlayerProfile.swift */,
 				8BD1A9575C44DB3038636708 /* PuzzleStats.swift */,
 			);
@@ -268,13 +284,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				C69D35765787B1082430842F /* ChessComService.swift in Sources */,
-				01A1B2C3D4E5F6A7B8C9D003 /* GameStats.swift in Sources */,
-				01A1B2C3D4E5F6A7B8C9D001 /* GoalMode.swift in Sources */,
+				FC895EB1DDCEB662A14A2E56 /* ChessService.swift in Sources */,
 				1D27A4F5E86A0EC256C857F9 /* DashboardView.swift in Sources */,
+				093B5F4D310DDA75CB90B480 /* GameStats.swift in Sources */,
+				23893BA3C3C12CF926D28CDA /* GoalMode.swift in Sources */,
 				A4123FAD8E161D91F1761AC7 /* HistoryView.swift in Sources */,
+				9E7BFA4AFFD30F38CB936339 /* LichessAuthService.swift in Sources */,
+				5B435BA4FA53336B24B9C955 /* LichessService.swift in Sources */,
 				7A7F99D7D5A20BB044273066 /* MainTabView.swift in Sources */,
 				03907135162CCF4FD1C48E6F /* NotificationService.swift in Sources */,
 				D5970A55CC5DD5CADDA57FF8 /* OnboardingView.swift in Sources */,
+				C61A5F02CB49F2316A0BB371 /* Platform.swift in Sources */,
 				F731DF68FF540504837ECBB5 /* PlayerProfile.swift in Sources */,
 				856E7F35E12C9E0A07DF38BC /* PuzzleStats.swift in Sources */,
 				BFEA16859BF1AC1B48715125 /* SettingsView.swift in Sources */,
@@ -289,9 +309,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB1C1742EDDFAE8101B3DC8C /* ChessComService.swift in Sources */,
-				01A1B2C3D4E5F6A7B8C9D004 /* GameStats.swift in Sources */,
-				01A1B2C3D4E5F6A7B8C9D002 /* GoalMode.swift in Sources */,
+				1F17EFB65C5E6CFF9F8BCA67 /* ChessService.swift in Sources */,
+				1B9EDB74D09A5BBE49ACAB65 /* GameStats.swift in Sources */,
+				CA52F5D868C5AEB20C2DAB26 /* GoalMode.swift in Sources */,
+				998D34C57A368A9EC4E1CD36 /* LichessAuthService.swift in Sources */,
+				6215A8CFAA59E64F530D3A67 /* LichessService.swift in Sources */,
 				0FAA9135938609F7107BC6BD /* NotificationService.swift in Sources */,
+				E517C67C3631C03D8DE2CE79 /* Platform.swift in Sources */,
 				BD85CB182968DCD1F49A2053 /* PlayerProfile.swift in Sources */,
 				05A03092108285F6833202F1 /* PuzzleProgressView.swift in Sources */,
 				27C26B6FCA7C9EF5777C5310 /* PuzzleStats.swift in Sources */,
@@ -380,7 +404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = SixtyFourWidgetExtension/SixtyFourWidgetExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = SixtyFourWidgetExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -401,9 +425,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SixtyFour/SixtyFour.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -480,7 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = SixtyFourWidgetExtension/SixtyFourWidgetExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 2;
 				INFOPLIST_FILE = SixtyFourWidgetExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -501,9 +524,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SixtyFour/SixtyFour.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

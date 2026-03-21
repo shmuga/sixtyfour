@@ -1,23 +1,6 @@
 import Foundation
 
-enum ChessComError: LocalizedError {
-    case invalidUsername
-    case networkError(Error)
-    case decodingError(Error)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidUsername:
-            return "Username not found on chess.com"
-        case .networkError(let error):
-            return "Network error: \(error.localizedDescription)"
-        case .decodingError(let error):
-            return "Failed to parse response: \(error.localizedDescription)"
-        }
-    }
-}
-
-final class ChessComService {
+final class ChessComService: ChessService {
     static let shared = ChessComService()
 
     private let session: URLSession
@@ -182,15 +165,15 @@ final class ChessComService {
         do {
             (data, response) = try await session.data(from: url)
         } catch {
-            throw ChessComError.networkError(error)
+            throw ChessServiceError.networkError(error)
         }
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
-            throw ChessComError.invalidUsername
+            throw ChessServiceError.invalidUsername
         }
         do {
             return try JSONDecoder().decode(T.self, from: data)
         } catch {
-            throw ChessComError.decodingError(error)
+            throw ChessServiceError.decodingError(error)
         }
     }
 }

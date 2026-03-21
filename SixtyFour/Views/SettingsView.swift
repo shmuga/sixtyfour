@@ -28,7 +28,7 @@ struct SettingsView: View {
                                 .foregroundColor(SFColor.ivory3)
                         }
                     } trailing: {
-                        Text("chess.com \u{2197}")
+                        Text(store.platform == .lichess ? "lichess.org \u{2197}" : "chess.com \u{2197}")
                             .font(.system(size: 10, design: .monospaced))
                             .foregroundColor(SFColor.amber)
                     }

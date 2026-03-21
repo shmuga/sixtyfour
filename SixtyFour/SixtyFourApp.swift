@@ -28,13 +28,15 @@ struct SixtyFourApp: App {
         guard url.scheme == "sixtyfour",
               url.host == "open-chesscom" else { return }
 
-        let chessURL: URL
-        if url.path.contains("play") {
-            chessURL = URL(string: "https://www.chess.com/play")!
+        let isPlay = url.path.contains("play")
+
+        let targetURL: URL
+        if store.platform == .lichess {
+            targetURL = URL(string: isPlay ? "https://lichess.org/" : "https://lichess.org/training")!
         } else {
-            chessURL = URL(string: "https://www.chess.com/puzzles")!
+            targetURL = URL(string: isPlay ? "https://www.chess.com/play" : "https://www.chess.com/puzzles")!
         }
 
-        UIApplication.shared.open(chessURL)
+        UIApplication.shared.open(targetURL)
     }
 }
