@@ -9,6 +9,7 @@ struct PuzzleEntry: TimelineEntry {
     let rating: Int?
     let username: String
     let isPlaceholder: Bool
+    let hasData: Bool
     let goalMode: GoalMode
 
     var remaining: Int { max(0, target - solved) }
@@ -23,13 +24,13 @@ struct PuzzleEntry: TimelineEntry {
     static let puzzlePlaceholder = PuzzleEntry(
         date: .now, solved: 7, failed: 3, target: 10,
         rating: 1511, username: "player", isPlaceholder: true,
-        goalMode: .puzzles
+        hasData: true, goalMode: .puzzles
     )
 
     static let gamePlaceholder = PuzzleEntry(
         date: .now, solved: 2, failed: 1, target: 3,
         rating: 1247, username: "player", isPlaceholder: true,
-        goalMode: .games
+        hasData: true, goalMode: .games
     )
 
     // Keep backward compat
@@ -68,7 +69,7 @@ struct PuzzleTimelineProvider: TimelineProvider {
             completion(PuzzleEntry(
                 date: .now, solved: 0, failed: 0, target: target,
                 rating: nil, username: username, isPlaceholder: false,
-                goalMode: .puzzles
+                hasData: true, goalMode: .puzzles
             ))
             return
         }
@@ -84,13 +85,14 @@ struct PuzzleTimelineProvider: TimelineProvider {
                     rating: result.rating,
                     username: username,
                     isPlaceholder: false,
+                    hasData: true,
                     goalMode: .puzzles
                 ))
             } catch {
                 completion(PuzzleEntry(
                     date: .now, solved: 0, failed: 0, target: target,
                     rating: nil, username: username, isPlaceholder: false,
-                    goalMode: .puzzles
+                    hasData: false, goalMode: .puzzles
                 ))
             }
         }
@@ -145,7 +147,7 @@ struct GameTimelineProvider: TimelineProvider {
             completion(PuzzleEntry(
                 date: .now, solved: 0, failed: 0, target: target,
                 rating: nil, username: username, isPlaceholder: false,
-                goalMode: .games
+                hasData: true, goalMode: .games
             ))
             return
         }
@@ -161,13 +163,14 @@ struct GameTimelineProvider: TimelineProvider {
                     rating: result.rating,
                     username: username,
                     isPlaceholder: false,
+                    hasData: true,
                     goalMode: .games
                 ))
             } catch {
                 completion(PuzzleEntry(
                     date: .now, solved: 0, failed: 0, target: target,
                     rating: nil, username: username, isPlaceholder: false,
-                    goalMode: .games
+                    hasData: false, goalMode: .games
                 ))
             }
         }
@@ -202,6 +205,7 @@ struct CombinedGoalEntry: TimelineEntry {
     let gameRating: Int?
     let username: String
     let isPlaceholder: Bool
+    let hasData: Bool
 
     var puzzleRemaining: Int { max(0, puzzleTarget - puzzleSolved) }
     var gameRemaining: Int { max(0, gameTarget - gameSolved) }
@@ -218,7 +222,7 @@ struct CombinedGoalEntry: TimelineEntry {
         date: .now,
         puzzleSolved: 7, puzzleFailed: 3, puzzleTarget: 10, puzzleRating: 1511,
         gameSolved: 2, gameFailed: 1, gameTarget: 3, gameRating: 1247,
-        username: "player", isPlaceholder: true
+        username: "player", isPlaceholder: true, hasData: true
     )
 }
 
@@ -255,7 +259,7 @@ struct CombinedGoalTimelineProvider: TimelineProvider {
                 date: .now,
                 puzzleSolved: 0, puzzleFailed: 0, puzzleTarget: puzzleTarget, puzzleRating: nil,
                 gameSolved: 0, gameFailed: 0, gameTarget: gameTarget, gameRating: nil,
-                username: "", isPlaceholder: false
+                username: "", isPlaceholder: false, hasData: true
             ))
             return
         }
@@ -263,23 +267,26 @@ struct CombinedGoalTimelineProvider: TimelineProvider {
         Task {
             var pSolved = 0, pFailed = 0, pRating: Int?
             var gSolved = 0, gFailed = 0, gRating: Int?
+            var anySuccess = false
 
             if let pResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .puzzles, timeClass: .blitz) {
                 pSolved = pResult.solved
                 pFailed = pResult.failed
                 pRating = pResult.rating
+                anySuccess = true
             }
             if let gResult = try? await ChessComService.shared.fetchTodayStats(username, mode: .games, timeClass: timeClass) {
                 gSolved = gResult.solved
                 gFailed = gResult.failed
                 gRating = gResult.rating
+                anySuccess = true
             }
 
             completion(CombinedGoalEntry(
                 date: .now,
                 puzzleSolved: pSolved, puzzleFailed: pFailed, puzzleTarget: puzzleTarget, puzzleRating: pRating,
                 gameSolved: gSolved, gameFailed: gFailed, gameTarget: gameTarget, gameRating: gRating,
-                username: username, isPlaceholder: false
+                username: username, isPlaceholder: false, hasData: anySuccess
             ))
         }
     }
@@ -311,11 +318,12 @@ struct WidgetRatingEntry: TimelineEntry {
     let timeClass: TimeClass
     let username: String
     let isPlaceholder: Bool
+    let hasData: Bool
 
     static let placeholder = WidgetRatingEntry(
         date: .now, rating: 1247, bestRating: 1385,
         wins: 312, losses: 198, draws: 47,
-        timeClass: .blitz, username: "player", isPlaceholder: true
+        timeClass: .blitz, username: "player", isPlaceholder: true, hasData: true
     )
 }
 
@@ -349,7 +357,7 @@ struct RatingTimelineProvider: TimelineProvider {
             completion(WidgetRatingEntry(
                 date: .now, rating: 0, bestRating: 0,
                 wins: 0, losses: 0, draws: 0,
-                timeClass: timeClass, username: "", isPlaceholder: false
+                timeClass: timeClass, username: "", isPlaceholder: false, hasData: true
             ))
             return
         }
@@ -367,13 +375,15 @@ struct RatingTimelineProvider: TimelineProvider {
                     draws: category?.record?.draw ?? 0,
                     timeClass: timeClass,
                     username: username,
-                    isPlaceholder: false
+                    isPlaceholder: false,
+                    hasData: true
                 ))
             } catch {
                 completion(WidgetRatingEntry(
                     date: .now, rating: 0, bestRating: 0,
                     wins: 0, losses: 0, draws: 0,
-                    timeClass: timeClass, username: username, isPlaceholder: false
+                    timeClass: timeClass, username: username, isPlaceholder: false,
+                    hasData: false
                 ))
             }
         }

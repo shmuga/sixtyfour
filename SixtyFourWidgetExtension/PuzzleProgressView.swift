@@ -1,6 +1,23 @@
 import SwiftUI
 import WidgetKit
 
+// MARK: - No Data View
+
+struct WidgetNoDataView: View {
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(Color(hex: 0x555049))
+            Text("NO DATA")
+                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                .foregroundColor(Color(hex: 0x555049))
+                .kerning(1.5)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 // MARK: - Activity Ring
 
 struct ActivityRing: View {
@@ -53,13 +70,17 @@ struct PuzzleWidgetView: View {
 
     var body: some View {
         Group {
-            switch family {
-            case .systemSmall:
-                smallWidget
-            case .systemMedium:
-                mediumWidget
-            default:
-                smallWidget
+            if !entry.hasData && !entry.isPlaceholder {
+                WidgetNoDataView()
+            } else {
+                switch family {
+                case .systemSmall:
+                    smallWidget
+                case .systemMedium:
+                    mediumWidget
+                default:
+                    smallWidget
+                }
             }
         }
         .widgetURL(deepLink ?? URL(string: "sixtyfour://home")!)
@@ -243,13 +264,17 @@ struct RatingWidgetView: View {
 
     var body: some View {
         Group {
-            switch family {
-            case .systemSmall:
-                smallRating
-            case .systemMedium:
-                mediumRating
-            default:
-                smallRating
+            if !entry.hasData && !entry.isPlaceholder {
+                WidgetNoDataView()
+            } else {
+                switch family {
+                case .systemSmall:
+                    smallRating
+                case .systemMedium:
+                    mediumRating
+                default:
+                    smallRating
+                }
             }
         }
         .widgetURL(URL(string: "sixtyfour://home")!)
@@ -361,6 +386,15 @@ struct CombinedGoalWidgetView: View {
     }
 
     var body: some View {
+        if !entry.hasData && !entry.isPlaceholder {
+            WidgetNoDataView()
+                .widgetURL(URL(string: "sixtyfour://home")!)
+        } else {
+            combinedContent
+        }
+    }
+
+    private var combinedContent: some View {
         ZStack {
             knightImage
                 .foregroundColor(Color.white.opacity(0.05))
