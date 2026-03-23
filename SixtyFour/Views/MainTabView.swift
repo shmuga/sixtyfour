@@ -16,71 +16,45 @@ enum Tab: String, CaseIterable {
 
 struct MainTabView: View {
     @EnvironmentObject var store: UserStore
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selected: Tab = .home
 
-    private var isCompactHeight: Bool { verticalSizeClass == .compact }
+    init() {
+        let item = UITabBarItemAppearance()
+        let font = UIFont.monospacedSystemFont(ofSize: 8, weight: .medium)
+        item.normal.titleTextAttributes = [.font: font]
+        item.selected.titleTextAttributes = [.font: font]
+
+        let appearance = UITabBarAppearance()
+        appearance.stackedLayoutAppearance = item
+        appearance.inlineLayoutAppearance = item
+        appearance.compactInlineLayoutAppearance = item
+        UITabBar.appearance().standardAppearance = appearance
+    }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            // Content
-            Group {
-                switch selected {
-                case .home: DashboardView()
-                case .stats: HistoryView()
-                case .settings: SettingsView()
+        TabView(selection: $selected) {
+            DashboardView()
+                .tabItem {
+                    Image(systemName: Tab.home.icon)
+                    Text(Tab.home.label)
                 }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(.bottom, isCompactHeight ? 36 : 64)
+                .tag(Tab.home)
 
-            // Glass tab bar
-            HStack {
-                ForEach(Tab.allCases, id: \.self) { tab in
-                    Button {
-                        selected = tab
-                    } label: {
-                        if isCompactHeight {
-                            HStack(spacing: 4) {
-                                Image(systemName: tab.icon)
-                                    .font(.system(size: 14))
-                                Text(tab.label)
-                                    .font(.system(size: 8, weight: .regular, design: .monospaced))
-                                    .kerning(0.8)
-                            }
-                            .foregroundColor(selected == tab ? SFColor.amber : SFColor.ivory3)
-                            .frame(maxWidth: .infinity)
-                        } else {
-                            VStack(spacing: 3) {
-                                Image(systemName: tab.icon)
-                                    .font(.system(size: 19))
-                                Text(tab.label)
-                                    .font(.system(size: 8, weight: .regular, design: .monospaced))
-                                    .kerning(0.8)
-                            }
-                            .foregroundColor(selected == tab ? SFColor.amber : SFColor.ivory3)
-                            .frame(maxWidth: .infinity)
-                        }
-                    }
+            HistoryView()
+                .tabItem {
+                    Image(systemName: Tab.stats.icon)
+                    Text(Tab.stats.label)
                 }
-            }
-            .padding(.top, isCompactHeight ? 6 : 10)
-            .padding(.bottom, isCompactHeight ? 2 : 6)
-            .background(
-                ZStack {
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .environment(\.colorScheme, .dark)
-                    Rectangle()
-                        .fill(SFColor.s1.opacity(0.6))
+                .tag(Tab.stats)
+
+            SettingsView()
+                .tabItem {
+                    Image(systemName: Tab.settings.icon)
+                    Text(Tab.settings.label)
                 }
-                .overlay(alignment: .top) {
-                    Rectangle().fill(Color.white.opacity(0.08)).frame(height: 0.5)
-                }
-                .ignoresSafeArea(.all, edges: .bottom)
-            )
+                .tag(Tab.settings)
         }
-        .background(SFColor.s2.ignoresSafeArea())
+        .tint(SFColor.amber)
         .preferredColorScheme(.dark)
     }
 }

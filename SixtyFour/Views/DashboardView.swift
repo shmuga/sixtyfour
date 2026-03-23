@@ -179,33 +179,35 @@ struct DashboardView: View {
                 .padding(.bottom, 3)
 
                 // Big number
-                if isLoading {
-                    ProgressView().tint(SFColor.amber).padding(.vertical, 16)
-                } else {
-                    Text("\(rating ?? 0)")
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(SFColor.ivory)
-                        .kerning(1)
+                Group {
+                    if isLoading {
+                        ProgressView().tint(SFColor.amber)
+                    } else {
+                        Text("\(rating ?? 0)")
+                            .font(.system(size: 48, weight: .bold))
+                            .foregroundColor(SFColor.ivory)
+                            .kerning(1)
+                    }
                 }
+                .frame(height: 52)
 
                 // Delta badge
-                if !isLoading {
-                    HStack(spacing: 5) {
-                        Image(systemName: "arrow.up")
-                            .font(.system(size: 9, weight: .bold))
-                        Text("+\(solved) today")
-                            .font(.system(size: 9, design: .monospaced))
-                    }
-                    .foregroundColor(SFColor.green)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 3)
-                    .background(
-                        Capsule()
-                            .fill(SFColor.green.opacity(0.12))
-                            .overlay(Capsule().stroke(SFColor.green.opacity(0.2), lineWidth: 1))
-                    )
-                    .padding(.top, 6)
+                HStack(spacing: 5) {
+                    Image(systemName: "arrow.up")
+                        .font(.system(size: 9, weight: .bold))
+                    Text("+\(solved) today")
+                        .font(.system(size: 9, design: .monospaced))
                 }
+                .foregroundColor(SFColor.green)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 3)
+                .background(
+                    Capsule()
+                        .fill(SFColor.green.opacity(0.12))
+                        .overlay(Capsule().stroke(SFColor.green.opacity(0.2), lineWidth: 1))
+                )
+                .padding(.top, 6)
+                .opacity(isLoading ? 0 : 1)
 
                 // Sparkline — last 7 days
                 VStack(spacing: 0) {
